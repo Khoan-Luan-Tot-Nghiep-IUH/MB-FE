@@ -7,11 +7,15 @@ import {
   Image,
   Alert,
 } from "react-native";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import styles from "../../theme/Home/LoginStyle"; // Cập nhật đường dẫn
+import styles from "../../theme/Home/LoginStyle";
 import config from "../../../config";
+import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setCredentials } from "../../Redux/User/userSlice";
+import { jwtDecode } from "jwt-decode"; // Đảm bảo bạn đã import jwtDecode
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -19,16 +23,16 @@ const Login = ({ navigation }) => {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  // Google login
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
-      "12478692708-8kfnc8jelmtht963r0fukmul21tsgf6m.apps.googleusercontent.com", // Thay thế bằng client ID của bạn
+      "12478692708-8kfnc8jelmtht963r0fukmul21tsgf6m.apps.googleusercontent.com",
   });
 
   useEffect(() => {
     if (response?.type === "success") {
-      const { id_token } = response.params; // Lấy id_token từ response
+      const { id_token } = response.params;
       handleGoogleLogin(id_token);
     }
   }, [response]);
@@ -38,8 +42,9 @@ const Login = ({ navigation }) => {
       const res = await axios.post(`${config.BASE_URL}/user/google-login`, {
         id_token,
       });
-
       if (res.data.success) {
+        const userData = res.data.user;
+        dispatch(setCredentials(userData));
         navigation.navigate("Main");
       } else {
         Alert.alert("Đăng nhập thất bại", res.data.message);
@@ -52,35 +57,36 @@ const Login = ({ navigation }) => {
       );
     }
   };
-  // Function to handle login with Axios
+
   const handleLogin = async () => {
     if (userName === "" || password === "") {
       Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
       return;
     }
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.post(`${config.BASE_URL}/user/login`, {
+      const res = await axios.post(`${config.BASE_URL}/user/login`, {
         userName,
         password,
       });
 
-      if (response.data.success) {
+      if (res.data.success) {
+        const decodedUser = jwtDecode(res.data.accessToken); // Giải mã accessToken nếu có
+        const userInfo = { ...decodedUser, token: res.data.accessToken };
+        await AsyncStorage.setItem("user", JSON.stringify(userInfo));
+        dispatch(setCredentials(userInfo));
         navigation.navigate("Main");
       } else {
-        Alert.alert(
-          "Đăng nhập thất bại",
-          response.data.message ||
-            "Tên đăng nhập hoặc mật khẩu không chính xác!"
-        );
+        Alert.alert("Đăng nhập thất bại", res.data.message);
       }
-    } catch (error) {
-      console.error(error.message);
+    } catch (err) {
+      console.error("Error during login:", err.message);
       Alert.alert("Lỗi", "Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.");
     } finally {
-      setLoading(false); // Stop loading after request completes
+      setLoading(false);
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng Nhập</Text>
@@ -102,7 +108,7 @@ const Login = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={handleLogin}
-        disabled={loading} // Disable button during login process
+        disabled={loading}
       >
         <Text style={styles.buttonText}>
           {loading ? "Đang đăng nhập..." : "Đăng Nhập"}

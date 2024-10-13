@@ -1,27 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
-  TextInput,
   TouchableOpacity,
-  Image,
+  ImageBackground,
   SafeAreaView,
   Modal,
   StyleSheet,
+  ActivityIndicator,
+  Alert, // Import Alert for user feedback
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import styles from "../../../theme/HomePage/Tabottom/HomePageStyle";
-import { ImageBackground } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Select from "../ModalPage/Select"; // Ensure the Select component is imported
+import config from "../../../../config";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const HomePage = () => {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [departure, setDeparture] = useState(""); // State for "Departure"
-  const [destination, setDestination] = useState(""); // State for "Destination"
-  const [showSelectModal, setShowSelectModal] = useState(false); // State for modal visibility
-  const [selectType, setSelectType] = useState("departure"); // To differentiate between departure and destination selection
+  const [departure, setDeparture] = useState("");
+  const [destination, setDestination] = useState("");
+  const [showSelectModal, setShowSelectModal] = useState(false);
+  const [selectType, setSelectType] = useState("departure");
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        setLoading(true);
+        const response = await getLocation();
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+        Alert.alert("Error", "Failed to load locations. Please try again."); // User feedback
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLocations();
+  }, []);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -29,20 +51,66 @@ const HomePage = () => {
     setDate(currentDate);
   };
 
-  const swapPlaces = () => {
-    const temp = departure;
-    setDeparture(destination);
-    setDestination(temp);
+  const getLocation = async () => {
+    const response = await fetch(`${config.BASE_URL}/locations`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
   };
+
+  const handleSelectLocation = (location) => {
+    if (selectType === "departure") {
+      setDeparture(location);
+    } else {
+      setDestination(location);
+    }
+    setShowSelectModal(false);
+  };
+
+  const searchTrips = async () => {
+    if (!departure || !destination) {
+      Alert.alert("Warning", "Please select both departure and destination!"); // User feedback
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await axios.get(`${config.BASE_URL}/trips/search`, {
+        params: {
+          departureLocation: departure,
+          arrivalLocation: destination,
+          departureDate: date.toISOString().split("T")[0],
+        },
+      });
+      if (response.data.success) {
+        navigation.navigate("SearchResultsPage", {
+          trips: response.data.data.departureTrips,
+          departureLocation: departure,
+          arrivalLocation: destination,
+          departureDate: date.toISOString().split("T")[0],
+        });
+      } else {
+        console.log(response.data.message);
+        Alert.alert("Error", response.data.message); // User feedback
+      }
+    } catch (error) {
+      console.error("Error searching trips:", error);
+      Alert.alert("Error", "Failed to search for trips. Please try again."); // User feedback
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container1}>
       <View>
+        <View style={styles.header}></View>
         <ImageBackground
           source={{
             uri: "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/hinh-nen-lap-top-cute-10.jpg",
           }}
           style={styles.headerBackground}
-          resizeMode="contains"
+          resizeMode="cover"
         >
           <View style={styles.headerContainer}>
             <Text style={styles.greeting}>Xin chào</Text>
@@ -51,103 +119,99 @@ const HomePage = () => {
             </Text>
           </View>
         </ImageBackground>
-        {/* Inputs */}
+
         <View style={styles.view}>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                placeholder="Nơi đi"
-                placeholderTextColor="#666"
-                value={departure} // Set value from state
-                editable={false} // Make it non-editable
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectType("departure");
-                  setShowSelectModal(true);
-                }}
-              >
-                <FontAwesome
-                  name="arrow-down"
-                  size={25}
-                  color="red"
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-            </View>
-            {/* Input for "Destination" */}
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                placeholder="Nơi đến"
-                placeholderTextColor="#666"
-                value={destination} // Set value from state
-                editable={false} // Make it non-editable
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectType("destination");
-                  setShowSelectModal(true);
-                }}
-              >
-                <FontAwesome
-                  name="arrow-up"
-                  size={25}
-                  color="red"
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-            </View>
-            {/* Input for "Departure Date" */}
-            <TouchableOpacity
-              style={styles.inputWrapper}
-              onPress={() => setShowPicker(true)}
-            >
-              <TextInput
-                style={styles.input}
-                placeholder="Ngày khởi hành"
-                placeholderTextColor="#666"
-                value={date.toLocaleDateString()}
-                editable={false}
-              />
-              <FontAwesome
-                name="calendar"
-                size={25}
-                color="red"
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            {/* Show DateTimePicker */}
-            {showPicker && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                is24Hour={true}
-                onChange={onChange}
-              />
-            )}
-          </View>
-          <View>
-            {/* Search Button */}
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Tìm chuyến đi</Text>
-            </TouchableOpacity>
-          </View>
-          {/* News Section */}
-          <View style={styles.newsContainer}>
-            <Text style={styles.newsTitle}>Tin tức</Text>
-            <View style={styles.newsItem}>
-              <Image
-                source={{ uri: "https://example.com/news_image.jpg" }}
-                style={styles.newsImage}
-              />
-              <Text style={styles.newsText}>Thông Báo Mở Bán Vé</Text>
-            </View>
-          </View>
+          <TouchableOpacity
+            style={styles.inputWrapper}
+            onPress={() => {
+              setSelectType("departure");
+              setShowSelectModal(true);
+            }}
+          >
+            <Text style={styles.input}>{departure || "Nơi đi"}</Text>
+            <FontAwesome
+              name="arrow-down"
+              size={25}
+              color="red"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.inputWrapper}
+            onPress={() => {
+              setSelectType("destination");
+              setShowSelectModal(true);
+            }}
+          >
+            <Text style={styles.input}>{destination || "Nơi đến"}</Text>
+            <FontAwesome
+              name="arrow-up"
+              size={25}
+              color="red"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.inputWrapper}
+            onPress={() => setShowPicker(true)}
+          >
+            <Text style={styles.input}>
+              {date.toLocaleDateString() || "Ngày khởi hành"}
+            </Text>
+            <FontAwesome
+              name="calendar"
+              size={25}
+              color="red"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+
+          {showPicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+
+          <TouchableOpacity style={styles.button} onPress={searchTrips}>
+            <Text style={styles.buttonText}>Tìm chuyến đi</Text>
+          </TouchableOpacity>
+
+          {loading && <ActivityIndicator size="large" color="blue" />}
         </View>
       </View>
+
+      <Modal visible={showSelectModal} transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Chọn địa điểm</Text>
+            {locations.length > 0 ? (
+              locations.map((location) => (
+                <TouchableOpacity
+                  key={location.id ? location.id : location.name}
+                  onPress={() => handleSelectLocation(location.name)}
+                  style={styles.modalOption}
+                >
+                  <Text style={styles.modalOptionText}>{location.name}</Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.modalOptionText}>Không có địa điểm nào</Text>
+            )}
+            <TouchableOpacity
+              onPress={() => setShowSelectModal(false)}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>Đóng</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
