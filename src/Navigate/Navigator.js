@@ -15,6 +15,7 @@ import TripListScreen from "../Screen/HomePage/MenuTab/Home/TripListScreen";
 import SearchResultScreen from "../Screen/HomePage/MenuTab/Home/SearchResultsPage";
 import DetailsTicket from "../Screen/HomePage/MenuTab/Home/DetailsTicket";
 import SeatSelection from "../Screen/HomePage/MenuTab/Home/SeatSelection";
+import Booking from "../Screen/HomePage/MenuTab/Home/Booking";
 const Stack = createStackNavigator();
 const StackNavigator = () => {
   return (
@@ -34,6 +35,7 @@ const StackNavigator = () => {
         <Stack.Screen name="SearchResultsPage" component={SearchResultScreen}/>
         <Stack.Screen name="DetailsTicket" component={DetailsTicket} />
         <Stack.Screen name="SeatSelection" component={SeatSelection} />
+        <Stack.Screen name="Booking" component={Booking} />
       </Stack.Navigator>
     </NavigationContainer>
   );

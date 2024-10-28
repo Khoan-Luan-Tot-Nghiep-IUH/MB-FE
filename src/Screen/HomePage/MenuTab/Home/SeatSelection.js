@@ -18,7 +18,22 @@ const SeatSelection = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0); // State để lưu tổng giá tiền
-
+  const handleContinue = () => {
+    const selectedSeatNumbers = selectedSeats
+      .map((seatId) => {
+        const seat = [...seats.lower, ...seats.upper].find(
+          (s) => s._id === seatId
+        );
+        return seat ? seat.seatNumber : null;
+      })
+      .filter((seatNumber) => seatNumber !== null);
+    navigation.navigate("Booking", {
+      tripId,
+      seatNumbers: selectedSeatNumbers, // Pass seat numbers instead of IDs
+      totalPrice,
+      departureDate,
+    });
+  };
   useEffect(() => {
     const fetchSeats = async () => {
       try {
@@ -203,7 +218,7 @@ const SeatSelection = ({ route, navigation }) => {
       </View>
 
       <View style={styles.buttonFooter}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleContinue}>
           <Text style={styles.buttonText}>Tiếp tục</Text>
         </TouchableOpacity>
       </View>
