@@ -9,27 +9,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#4CAF50", // Màu nền cho tiêu đề
-    paddingHorizontal: 16, // Padding ngang
-    paddingVertical: 16, // Padding dọc
-    width: "100%", // Đảm bảo headerContainer chiếm toàn bộ chiều rộng
+    backgroundColor: "#4CAF50", 
+    paddingHorizontal: 16, 
+    width: "100%", 
   },
   backButton: {
-    marginRight: 16, // Khoảng cách giữa biểu tượng và tiêu đề
+    marginRight: 16, 
   },
   titleContainer: {
-    flex: 1, // Để tiêu đề chiếm không gian còn lại
-    alignItems: "center", // Căn giữa các thành phần bên trong
+    flex: 1, 
+    alignItems: "center", 
   },
   header: {
     fontSize: 20,
-    color: "#ffffff", // Màu chữ tiêu đề
-    fontWeight: "bold", // Đậm chữ tiêu đề
+    color: "#ffffff", 
+    fontWeight: "bold", 
   },
   date: {
     fontSize: 16,
-    color: "#ffffff", // Màu chữ ngày
-    marginTop: 4, // Khoảng cách giữa tiêu đề và ngày
+    color: "#ffffff", 
+    marginTop: 4, //
   },
   row: {
     padding: 15,
@@ -49,13 +48,13 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   sold: {
-    backgroundColor: "#dc3545", // Màu đỏ cho ghế đã bán
+    backgroundColor: "#dc3545", 
   },
   available: {
-    backgroundColor: "#28a745", // Màu xanh lá cho ghế còn trống
+    backgroundColor: "#28a745", 
   },
   selected: {
-    backgroundColor: "#ffa500", // Màu vàng cam cho ghế đang chọn
+    backgroundColor: "#ffa500", 
   },
   seatText: {
     color: "#ffffff",
@@ -70,6 +69,42 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 16,
   },
+  statusSold: {
+    backgroundColor: "#dc3545", 
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginRight: 10,
+    width: 100, 
+    height: 40, 
+  },
+  statusAvailable: {
+    backgroundColor: "#28a745", 
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginRight: 10,
+    width: 100, 
+    height: 40, 
+  },
+  statusSelected: {
+    backgroundColor: "#ffa500", 
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    width: 100, 
+    height: 40, 
+  },
+
   buttonFooter: {
     paddingLeft: 20,
   },

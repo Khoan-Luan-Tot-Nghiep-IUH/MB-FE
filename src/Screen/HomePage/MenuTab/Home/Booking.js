@@ -5,29 +5,30 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import config from "../../../../../config"; // Ensure the correct path to config
+import QRCode from "react-native-qrcode-svg";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import Icon from "react-native-vector-icons/FontAwesome";
+import config from "../../../../../config";
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/BookingStyle";
+import payment from "../../../../../assets/payment.jpg";
+
 const Booking = ({ route, navigation }) => {
   const { tripId, seatNumbers, totalPrice, departureDate } = route.params;
-  const [paymentMethod, setPaymentMethod] = useState("OnBoard"); // Default payment method
+  const [paymentMethod, setPaymentMethod] = useState("OnBoard");
   const [loading, setLoading] = useState(false);
-  const user = useSelector((state) => state.user.userInfo); // Get user data from Redux
-  const token = useSelector((state) => state.user.userInfo.token); // Extract token
-  console.log("đây là token thanh toán", token);
+  const [qrCodeData, setQrCodeData] = useState(null);
+  const user = useSelector((state) => state.user.userInfo);
+  const token = useSelector((state) => state.user.userInfo.token);
+
   const handleBooking = async () => {
     setLoading(true);
     try {
-      console.log("Base URL:", `${config.BASE_URL}/bookings`);
-      console.log("Token:", token);
-      console.log("Selected Payment Method:", paymentMethod);
-      console.log("lấy số ghế ", seatNumbers);
-
       const seatNumbersAsIntegers = seatNumbers.map((seat) => parseInt(seat));
-    //   console.log("Seat Numbers as Integers:", seatNumbersAsIntegers);
-
       const response = await axios.post(
         `${config.BASE_URL}/bookings`,
         {
@@ -44,62 +45,107 @@ const Booking = ({ route, navigation }) => {
 
       const { data } = response.data;
       Alert.alert("Success", "Booking confirmed!");
-      console.log("Booking data:", data);
 
       if (paymentMethod === "Online") {
+        setQrCodeData(data.qrCode);
         navigation.navigate("Payment", { paymentLink: data.paymentLink });
       } else {
         navigation.navigate("BookingSuccess", { bookingId: data.bookingId });
       }
     } catch (error) {
       Alert.alert("Error", error.response?.data.message || "Booking failed.");
-      console.error("Error during booking:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const saveQrCode = async () => {
+    const uri = `${FileSystem.cacheDirectory}qr_code.png`;
+    qrCodeRef.toDataURL(async (data) => {
+      await FileSystem.writeAsStringAsync(uri, data, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const asset = await MediaLibrary.createAssetAsync(uri);
+      await MediaLibrary.createAlbumAsync("QR Codes", asset, false);
+      Alert.alert("QR Code Saved", "QR code has been saved to your gallery.");
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Booking Confirmation</Text>
-      {/* <View style={styles.tripDetails}>
-        <Text>Trip ID: {tripId}</Text>
-        <Text>Selected Seats: {seatNumbers.join(", ")}</Text>
-      </View> */}
-      {/* Payment Method Selection */}
-      <View style={styles.paymentMethodContainer}>
-        <Text style={styles.paymentMethodLabel}>Select Payment Method:</Text>
+    <View style={styles.angiang}></View>
+      <View style={styles.headerContainerBooking}>
         <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            paymentMethod === "OnBoard" ? styles.selectedOption : {},
-          ]}
-          onPress={() => setPaymentMethod("OnBoard")}
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
         >
-          <Text style={styles.paymentOptionText}>OnBoard</Text>
+          <Icon name="arrow-left" size={20} color="#333" />
+          <Text style={styles.backButtonText}>Quay lại</Text>
         </TouchableOpacity>
+
+        <Text style={styles.header}>Booking Confirmation</Text>
+      </View>
+      <View style={styles.header1}>
+        {/* Placeholder Image */}
+        <Image source={payment} style={styles.imagePlaceholder} />
+
+        <View style={styles.paymentMethodContainer}>
+          <Text style={styles.paymentMethodLabel}>Select Payment Method:</Text>
+          <TouchableOpacity
+            style={[
+              styles.paymentOption,
+              paymentMethod === "OnBoard" ? styles.selectedOption : {},
+            ]}
+            onPress={() => setPaymentMethod("OnBoard")}
+          >
+            <Icon name="money" size={20} color="#333" style={styles.icon} />
+            <Text style={styles.paymentOptionText}>OnBoard</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.paymentOption,
+              paymentMethod === "Online" ? styles.selectedOption : {},
+            ]}
+            onPress={() => setPaymentMethod("Online")}
+          >
+            <Icon
+              name="credit-card"
+              size={20}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.paymentOptionText}>Online</Text>
+          </TouchableOpacity>
+        </View>
+
+        {qrCodeData && paymentMethod === "Online" && (
+          <View style={styles.qrCodeContainer}>
+            <QRCode
+              value={qrCodeData}
+              size={200}
+              getRef={(c) => (qrCodeRef = c)}
+            />
+            <TouchableOpacity style={styles.saveButton} onPress={saveQrCode}>
+              <Text style={styles.saveButtonText}>Save QR Code</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            paymentMethod === "Online" ? styles.selectedOption : {},
-          ]}
-          onPress={() => setPaymentMethod("Online")}
+          style={styles.confirmButton}
+          onPress={handleBooking}
+          disabled={loading}
         >
-          <Text style={styles.paymentOptionText}>Online</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <View style={styles.confirmButtonContent}>
+              <Icon name="check-circle" size={18} color="#fff" />
+              <Text style={styles.confirmButtonText}>Confirm Booking</Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.confirmButton}
-        onPress={handleBooking}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator size="small" color="#ffffff" />
-        ) : (
-          <Text style={styles.confirmButtonText}>Confirm Booking</Text>
-        )}
-      </TouchableOpacity>
     </View>
   );
 };

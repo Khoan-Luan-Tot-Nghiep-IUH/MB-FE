@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import axios from "axios";
@@ -19,6 +20,13 @@ const SeatSelection = ({ route, navigation }) => {
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0); // State để lưu tổng giá tiền
   const handleContinue = () => {
+    if (selectedSeats.length === 0) {
+      Alert.alert(
+        "Thông báo",
+        "Bạn chưa chọn ghế nào. Vui lòng chọn ít nhất một ghế để tiếp tục."
+      );
+      return;
+    }
     const selectedSeatNumbers = selectedSeats
       .map((seatId) => {
         const seat = [...seats.lower, ...seats.upper].find(
@@ -27,9 +35,10 @@ const SeatSelection = ({ route, navigation }) => {
         return seat ? seat.seatNumber : null;
       })
       .filter((seatNumber) => seatNumber !== null);
+
     navigation.navigate("Booking", {
       tripId,
-      seatNumbers: selectedSeatNumbers, // Pass seat numbers instead of IDs
+      seatNumbers: selectedSeatNumbers,
       totalPrice,
       departureDate,
     });
@@ -42,7 +51,7 @@ const SeatSelection = ({ route, navigation }) => {
         );
         const seatData = response.data.data;
 
-        console.log("Dữ liệu ghế trả về từ API:", seatData); // Kiểm tra dữ liệu trả về
+        // console.log("Dữ liệu ghế trả về từ API:", seatData); 
 
         if (
           seatData &&
@@ -180,9 +189,9 @@ const SeatSelection = ({ route, navigation }) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Text style={styles.status}>Đã bán</Text>
-        <Text style={styles.status}>Còn trống</Text>
-        <Text style={styles.status}>Đang chọn</Text>
+        <Text style={styles.statusSold}>Đã bán</Text>
+        <Text style={styles.statusAvailable}>Còn trống</Text>
+        <Text style={styles.statusSelected}>Đang chọn</Text>
       </View>
 
       {/* Hiển thị danh sách ghế đã chọn */}

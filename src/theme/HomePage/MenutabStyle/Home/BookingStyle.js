@@ -4,30 +4,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f4f4f9",
-    padding: 20,
+    padding: 0,
   },
   header: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  tripDetails: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 8,
+    backgroundColor: "#33CC66", // Màu nền xám nhẹ
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginVertical: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-    marginBottom: 20,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4, // Cho Android
   },
-  tripDetailsText: {
-    fontSize: 16,
-    color: "#555",
-    marginBottom: 8,
+  angiang:{
+  marginBottom: 25,
+  },
+  header1: {
+    padding: 10,
+  },
+  imagePlaceholder: {
+    width: "100%",
+    height: 150,
+    marginBottom: 20,
+    borderRadius: 8,
+    resizeMode: "cover",
   },
   paymentMethodContainer: {
     marginTop: 20,
@@ -40,22 +44,28 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   paymentOption: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderRadius: 8,
     marginBottom: 10,
-    alignItems: "center",
     borderWidth: 2,
     borderColor: "#ccc",
   },
   selectedOption: {
     borderColor: "#ff6347",
+    backgroundColor: "#ffefd5",
   },
   paymentOptionText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#333",
+    marginLeft: 10,
+  },
+  icon: {
+    marginRight: 10,
   },
   confirmButton: {
     backgroundColor: "#ff6347",
@@ -64,15 +74,47 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
   },
+  confirmButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   confirmButtonText: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
+    marginLeft: 8,
   },
-  activityIndicatorContainer: {
-    flex: 1,
-    justifyContent: "center",
+  qrCodeContainer: {
     alignItems: "center",
+    marginTop: 20,
+  },
+  saveButton: {
+    marginTop: 10,
+    backgroundColor: "#4CAF50",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  saveButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  backButton: {
+    flexDirection: "row",
+ 
+  },
+  backButtonText: {
+    marginLeft: 5,
+    color: "#333",
+    fontSize: 16,
+  },
+  headerContainerBooking: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    backgroundColor: "#28A745",
   },
 });
 
