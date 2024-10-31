@@ -47,14 +47,12 @@ const SearchResultsPage = ({ route, navigation }) => {
   const applyFilters = () => {
     let filtered = trips.filter((trip) => {
       let isMatching = true;
-
       if (priceRange.min !== 0 || priceRange.max !== 1000000) {
         isMatching =
           isMatching &&
           trip.basePrice >= priceRange.min &&
           trip.basePrice <= priceRange.max;
       }
-
       if (departureTimeRange.min !== "0" || departureTimeRange.max !== "23") {
         const departureHour = new Date(trip.departureTime).getHours();
         isMatching =
@@ -62,7 +60,6 @@ const SearchResultsPage = ({ route, navigation }) => {
           departureHour >= parseInt(departureTimeRange.min) &&
           departureHour <= parseInt(departureTimeRange.max);
       }
-
       if (busTypeFilter !== "Tất cả") {
         isMatching =
           isMatching && trip.busType && trip.busType.name === busTypeFilter; // Check busType exists
@@ -152,7 +149,7 @@ const SearchResultsPage = ({ route, navigation }) => {
             </Picker>
           </View>
           <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Loại ghế:</Text>
+            <Text style={styles.filterLabel}>Loại Xe:</Text>
             <Picker
               selectedValue={busTypeFilter}
               style={styles.picker}
@@ -160,10 +157,13 @@ const SearchResultsPage = ({ route, navigation }) => {
             >
               <Picker.Item label="Tất cả" value="Tất cả" />
               <Picker.Item label="Limousine" value="Limousine" />
-              <Picker.Item label="Ghế" value="Ghế Ngồi" />
+              <Picker.Item label="Ghế" value="Lamborghini" />
+              <Picker.Item label="Ghế" value="Mescerdes" />
+              <Picker.Item label="Ghế" value="Xe Bus" />
+              <Picker.Item label="Ghế" value="Mescerdes" />
+              <Picker.Item label="Ghế" value="Mescerdes" />
             </Picker>
           </View>
-
           <View style={styles.filterItem}>
             <Text style={styles.filterLabel}>Giờ:</Text>
             <Picker

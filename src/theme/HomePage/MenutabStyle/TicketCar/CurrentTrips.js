@@ -1,13 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 
-const CurrentTrips = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Danh sách chuyến đi hiện tại</Text>
-    </View>
-  );
-};
+import {  StyleSheet } from "react-native";
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -22,4 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrentTrips;
+export default styles;

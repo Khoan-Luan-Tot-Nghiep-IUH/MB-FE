@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   profileIconContainer: {
-    paddingTop:13 ,
+    paddingTop: 13,
   },
   profileIcon: {
     width: 65,
@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    
-     
+
     width: "90%", // Limit the width for better centering and spacing
   },
   welcomeText: {
@@ -102,6 +101,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: "#FFF",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#343a40",
+  },
+  modalInput: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#d1d1d1",
+    padding: 10,
+    marginBottom: 15,
+    borderRadius: 5,
+    fontSize: 16,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  updateButton: {
+    backgroundColor: "#FF9000",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  updateButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  closeButton: {
+    backgroundColor: "#d1d1d1",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "#343a40",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
