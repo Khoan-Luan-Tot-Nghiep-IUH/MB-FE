@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-
+import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   view: {
-    backgroundColor: "#1C1C2E",
+    backgroundColor: "#FFFFFF",
     padding: 20,
     minHeight: 800,
   },
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     height: 35,
     paddingHorizontal: 15,
     color: "#000",
-    paddingTop:8,
+    paddingTop: 8,
   },
   icon: {
     marginLeft: 10,
@@ -124,6 +124,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  routesContainer: {
+    flexDirection: "row", // Set to row for horizontal layout
+    paddingVertical: 20,
+    
+  },
+  routeCardContainer: {
+    width: Dimensions.get("window").width * 0.8, // Adjust card width for better spacing in horizontal layout
+    marginRight: 10, // Add spacing between cards
+    gap: 10,  
+  },
+  navButton: {
+    position: "absolute",
+    top: "50%",
+    transform: [{ translateY: -20 }],
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#ccc",
+    borderRadius: 20,
+  },
+  leftButton: {
+    left: 0,
+  },
+  rightButton: {
+    right: 0,
+  },
+  buttonText: {
     color: "white",
     fontWeight: "bold",
   },

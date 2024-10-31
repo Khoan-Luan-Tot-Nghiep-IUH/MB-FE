@@ -44,7 +44,7 @@ const DetailsTicket = ({ route, navigation }) => {
   const handleBookTicket = () => {
     const departureDate = trip.departureTime;
     const tripId = trip._id;
-    navigation.navigate("SeatSelection", { tripId,departureDate });
+    navigation.navigate("SeatSelection", { tripId, departureDate });
     console.log(tripId);
   };
 
@@ -70,14 +70,12 @@ const DetailsTicket = ({ route, navigation }) => {
               {trip.departureLocation.name} → {trip.arrivalLocation.name}
             </Text>
           </View>
-
           <Text style={styles.tripDate}>
             Khởi hành: {departureDate} - {departureTime}
           </Text>
           <Text style={styles.tripDate}>
             Đến nơi: {arrivalDate} - {arrivalTime}
           </Text>
-
           <Text style={styles.tripPrice}>
             Giá vé:{" "}
             {new Intl.NumberFormat("vi-VN", {
@@ -85,27 +83,10 @@ const DetailsTicket = ({ route, navigation }) => {
               currency: "VND",
             }).format(trip.basePrice)}
           </Text>
-
           <Text style={styles.availableSeats}>
             Còn {trip.availableSeats} chỗ trống
           </Text>
-
-          <Text style={styles.scheduleTitle}>Lịch trình:</Text>
-          {trip.schedule.map((stop, index) => (
-            <View key={stop._id} style={styles.scheduleItem}>
-              <Text style={styles.scheduleStop}>
-                Điểm dừng {index + 1}: {stop.stopName}
-              </Text>
-              <Text>Địa chỉ: {stop.stopAddress}</Text>
-              <Text>
-                Thời gian đến:{" "}
-                {new Date(stop.estimatedArrivalTime).toLocaleString()}
-              </Text>
-              <Text>Số thứ tự dừng: {stop.stopOrder}</Text>
-            </View>
-          ))}
         </View>
-
         <TouchableOpacity style={styles.button} onPress={handleBookTicket}>
           <Text style={styles.buttonText}>Đặt vé</Text>
         </TouchableOpacity>

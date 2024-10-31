@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   Modal,
   StyleSheet,
+  Dimensions,
+  ScrollView,
   ActivityIndicator,
   Alert, // Import Alert for user feedback
 } from "react-native";
@@ -16,6 +18,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import config from "../../../../config";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import RouteCard from "./RouteCard";
 
 const HomePage = () => {
   const [date, setDate] = useState(new Date());
@@ -27,6 +30,49 @@ const HomePage = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+
+  const routes = [
+    {
+      image:
+        "https://f1e425bd6cd9ac6.cmccloud.com.vn/cms-tool/destination/images/5/img_hero.png?v1",
+      title: "Thành Phố Hồ Chí Minh - Đà Lạt",
+      price: "Từ 200.000đ",
+      from: "Thành Phố Hồ Chí Minh",
+      to: "Đà Lạt",
+    },
+    {
+      image:
+        "https://f1e425bd6cd9ac6.cmccloud.com.vn/cms-tool/destination/images/24/img_hero.png",
+      title: "Đồng Nai - Đà Lạt",
+      price: "Từ 100.000đ",
+      from: "Đồng Nai",
+      to: "Đà Lạt",
+    },
+    {
+      image:
+        "https://f1e425bd6cd9ac6.cmccloud.com.vn/cms-tool/destination/images/3/img_hero.png",
+      title: "Hà Nội - Đà Lạt",
+      price: "Từ 200.000đ",
+      from: "Hà Nội",
+      to: "Đà Lạt",
+    },
+    {
+      image:
+        "https://f1e425bd6cd9ac6.cmccloud.com.vn/cms-tool/destination/images/22/img_hero.png",
+      title: "Đồng Nai - Thành Phố Hồ Chí Minh",
+      price: "Từ 80.000đ",
+      from: "Đồng Nai",
+      to: "Thành Phố Hồ Chí Minh",
+    },
+    {
+      image:
+        "https://f1e425bd6cd9ac6.cmccloud.com.vn/cms-tool/destination/images/25/img_hero.png",
+      title: "Đồng Nai - Hà Nội",
+      price: "Từ 700.000đ",
+      from: "Đồng Nai",
+      to: "Hà Nội",
+    },
+  ];
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -70,7 +116,7 @@ const HomePage = () => {
 
   const searchTrips = async () => {
     if (!departure || !destination) {
-      Alert.alert("Warning", "Please select both departure and destination!"); // User feedback
+      Alert.alert("Warning", "Please select both departure and destination!");
       return;
     }
     try {
@@ -82,7 +128,10 @@ const HomePage = () => {
           departureDate: date.toISOString().split("T")[0],
         },
       });
-      if (response.data.success) {
+      if (
+        response.data.success &&
+        response.data.data.departureTrips.length > 0
+      ) {
         navigation.navigate("SearchResultsPage", {
           trips: response.data.data.departureTrips,
           departureLocation: departure,
@@ -90,14 +139,49 @@ const HomePage = () => {
           departureDate: date.toISOString().split("T")[0],
         });
       } else {
-        console.log(response.data.message);
-        Alert.alert("Error", response.data.message); // User feedback
+        Alert.alert("Thông báo", "Hiện tại không có chuyến đi nào phù hợp.");
       }
     } catch (error) {
-      console.error("Error searching trips:", error);
-      Alert.alert("Error", "Failed to search for trips. Please try again."); // User feedback
+      if (error.response && error.response.status === 404) {
+        Alert.alert("Thông báo", "Không tìm thấy chuyến đi nào.");
+      } else {
+        Alert.alert("Error", "Failed to search for trips. Please try again.");
+      }
+      // console.error("Error searching trips:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRouteSelect = async (from, to) => {
+    try {
+      const response = await axios.get(`${config.BASE_URL}/trips/search`, {
+        params: {
+          departureLocation: from,
+          arrivalLocation: to,
+          departureDate: date.toISOString().split("T")[0],
+        },
+      });
+      if (
+        response.data.success &&
+        response.data.data.departureTrips.length > 0
+      ) {
+        navigation.navigate("SearchResultsPage", {
+          trips: response.data.data.departureTrips,
+          departureLocation: from,
+          arrivalLocation: to,
+          departureDate: date.toISOString().split("T")[0],
+        });
+      } else {
+        Alert.alert("Thông báo", "Hiện tại không có chuyến đi nào phù hợp.");
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        Alert.alert("Thông báo", "Không tìm thấy chuyến đi nào.");
+      } else {
+        Alert.alert("Error", "Failed to search for trips. Please try again.");
+      }
+      // console.error("Error fetching trips:", error);
     }
   };
 
@@ -175,17 +259,31 @@ const HomePage = () => {
               mode="date"
               is24Hour={true}
               onChange={onChange}
+              minimumDate={new Date()}
             />
           )}
-
           <TouchableOpacity style={styles.button} onPress={searchTrips}>
             <Text style={styles.buttonText}>Tìm chuyến đi</Text>
           </TouchableOpacity>
-
           {loading && <ActivityIndicator size="large" color="blue" />}
+          <Text style={styles.title}>Tuyến đường phổ biến</Text>
+          <View style={styles.routesContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {routes.map((route, index) => (
+                <RouteCard
+                  key={index}
+                  image={route.image}
+                  title={route.title}
+                  price={route.price}
+                  from={route.from}
+                  to={route.to}
+                  onCardPress={handleRouteSelect} // Ensure this is passed correctly
+                />
+              ))}
+            </ScrollView>
+          </View>
         </View>
       </View>
-
       <Modal visible={showSelectModal} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

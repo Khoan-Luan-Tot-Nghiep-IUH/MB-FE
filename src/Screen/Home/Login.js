@@ -138,7 +138,10 @@ const Login = ({ navigation }) => {
           <Text style={styles.socialButtonText}>Facebook</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.signup}>
+      <TouchableOpacity
+        style={styles.signup}
+        onPress={() => navigation.navigate("Resgister")}
+      >
         <Text style={styles.signupText}>Chưa có tài khoản? Đăng ký</Text>
       </TouchableOpacity>
     </View>
