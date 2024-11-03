@@ -1,17 +1,32 @@
 import React from "react";
 import { View, Text, FlatList } from "react-native";
 import styles from "../../../../theme/HomePage/MenutabStyle/TicketCar/CompletedTrips";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons"; // Import các icon
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons"; // Import icons
 
-const CancelledTrips = ({ trips }) => {
+const CurrentTrips = ({ trips }) => {
   return (
     <View style={styles.container}>
       <FlatList
         data={trips}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => {
-          // Chuyển đổi và định dạng `departureTime`
-          const departureDate = new Date(item.trip.departureTime);
+          // Check if item.trip exists before accessing its properties
+          if (!item.trip) {
+            return (
+              <View style={styles.tripItem}>
+                <Text style={styles.infoText}>
+                  Trip details are unavailable
+                </Text>
+              </View>
+            );
+          }
+
+          // Extract data from populated trip object
+          const { departureLocation, arrivalLocation, departureTime, busType } =
+            item.trip;
+
+          // Convert and format `departureTime`
+          const departureDate = new Date(departureTime);
           const formattedDate = departureDate.toLocaleString("vi-VN", {
             weekday: "long",
             year: "numeric",
@@ -23,20 +38,19 @@ const CancelledTrips = ({ trips }) => {
 
           return (
             <View style={styles.tripItem}>
-              {/* Header của thẻ vé */}
+              {/* Header of the ticket card */}
               <View style={styles.tripHeader}>
                 <Text style={styles.location}>
                   <FontAwesome name="map-marker" size={16} color="#ff6347" />{" "}
-                  {item.trip.departureLocation.name}
+                  {departureLocation.name}
                 </Text>
                 <MaterialIcons name="arrow-forward" size={16} color="#333" />
                 <Text style={styles.location}>
                   <FontAwesome name="map-marker" size={16} color="#4A90E2" />{" "}
-                  {item.trip.arrivalLocation.name}
+                  {arrivalLocation.name}
                 </Text>
               </View>
-
-              {/* Thông tin chi tiết */}
+              {/* Detailed information */}
               <View style={styles.detailsContainer}>
                 <Text style={styles.infoText}>
                   <FontAwesome name="calendar" size={14} color="#333" /> Thời
@@ -44,7 +58,7 @@ const CancelledTrips = ({ trips }) => {
                 </Text>
                 <Text style={styles.infoText}>
                   <FontAwesome name="bus" size={14} color="#333" /> Loại xe:{" "}
-                  {item.trip.busType.name}
+                  {busType.name}
                 </Text>
                 <Text style={styles.infoText}>
                   <FontAwesome name="dollar" size={14} color="#333" /> Giá:{" "}
@@ -53,7 +67,6 @@ const CancelledTrips = ({ trips }) => {
                     currency: "VND",
                   })}
                 </Text>
-
                 <Text style={styles.infoText}>
                   <MaterialIcons name="event-seat" size={14} color="#333" /> Số
                   Ghế: {item.seatNumbers.join(", ")}
@@ -71,4 +84,4 @@ const CancelledTrips = ({ trips }) => {
   );
 };
 
-export default CancelledTrips;
+export default CurrentTrips;

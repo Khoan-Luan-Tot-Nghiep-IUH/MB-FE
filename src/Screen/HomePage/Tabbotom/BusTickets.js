@@ -25,7 +25,8 @@ const BusTickets = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = useSelector((state) => state.user.userInfo.token);
-  // Hàm lấy dữ liệu lịch sử đặt vé từ API
+
+  // Fetch booking history from API
   const fetchBookingHistory = async () => {
     setLoading(true);
     try {
@@ -35,37 +36,43 @@ const BusTickets = () => {
         },
       });
       const allBookings = response.data.data;
-      // console.log("Dữ liệu lịch sử đặt vé từ API:", allBookings); // In ra để kiểm tra
-      // Phân loại dữ liệu theo trạng thái booking
+
+      // Filter and categorize bookings by their actual statuses and presence of trip data
       const scheduledTrips = allBookings.filter(
-        (booking) => booking.status === "schedule"
+        (booking) =>
+          (booking.status === "schedule" ||
+            booking.trip?.status === "Scheduled") &&
+          booking.trip !== null
       );
       const completedTrips = allBookings.filter(
-        (booking) => booking.status === "completed"
+        (booking) =>
+          (booking.status === "completed" ||
+            booking.trip?.status === "Completed") &&
+          booking.trip !== null
       );
       const cancelledTrips = allBookings.filter(
-        (booking) => booking.status === "cancelled"
+        (booking) =>
+          (booking.status === "cancelled" || booking.status === "Confirmed") &&
+          booking.trip !== null
       );
+
       setBookings({
         schedule: scheduledTrips,
         completed: completedTrips,
         cancelled: cancelledTrips,
       });
+      setError(null); // Reset error if data is successfully fetched
     } catch (err) {
-
-
-      console.error("Lỗi khi tải dữ liệu lịch sử đặt vé:", err); // Log chi tiết lỗi
+      console.error("Error fetching booking history:", err);
       setError("Lỗi khi tải dữ liệu lịch sử đặt vé");
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
-    fetchBookingHistory();
-  }, []);
+    fetchBookingHistory(); 
+  }, []); 
 
-  // Hàm render component dựa trên tab đang chọn
   const renderActiveTabComponent = () => {
     switch (activeTab) {
       case "Hiện tại":
