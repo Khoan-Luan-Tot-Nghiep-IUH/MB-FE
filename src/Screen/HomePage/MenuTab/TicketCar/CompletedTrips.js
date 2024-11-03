@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, FlatList } from "react-native";
 import styles from "../../../../theme/HomePage/MenutabStyle/TicketCar/CompletedTrips";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons"; // Import các icon
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 const CompletedTrips = ({ trips }) => {
   return (
@@ -10,7 +10,18 @@ const CompletedTrips = ({ trips }) => {
         data={trips}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => {
-          // Chuyển đổi và định dạng `departureTime`
+          // Check if item.trip exists before accessing its properties
+          if (!item.trip) {
+            return (
+              <View style={styles.tripItem}>
+                <Text style={styles.infoText}>
+                  Trip details are unavailable
+                </Text>
+              </View>
+            );
+          }
+
+          // Convert and format `departureTime`
           const departureDate = new Date(item.trip.departureTime);
           const formattedDate = departureDate.toLocaleString("vi-VN", {
             weekday: "long",
@@ -23,7 +34,7 @@ const CompletedTrips = ({ trips }) => {
 
           return (
             <View style={styles.tripItem}>
-              {/* Header của thẻ vé */}
+              {/* Ticket card header */}
               <View style={styles.tripHeader}>
                 <Text style={styles.location}>
                   <FontAwesome name="map-marker" size={16} color="#ff6347" />{" "}
@@ -36,7 +47,7 @@ const CompletedTrips = ({ trips }) => {
                 </Text>
               </View>
 
-              {/* Thông tin chi tiết */}
+              {/* Detailed information */}
               <View style={styles.detailsContainer}>
                 <Text style={styles.infoText}>
                   <FontAwesome name="calendar" size={14} color="#333" /> Thời
