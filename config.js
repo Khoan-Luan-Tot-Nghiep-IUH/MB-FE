@@ -1,6 +1,6 @@
 // config.js
 const config = {
-  BASE_URL: "http://192.168.1.3:5000/api",
+  BASE_URL: "https://server-zeym.onrender.com/api",
 };
 
 export default config;
