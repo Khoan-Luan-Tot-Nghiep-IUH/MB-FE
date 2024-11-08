@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "react-native-vector-icons";
 import axios from "axios";
 import io from "socket.io-client";
 import config from "../../../../../config"; // Ensure SOCKET_URL is correctly defined here
@@ -150,8 +151,8 @@ const SeatSelection = ({ route, navigation }) => {
   const handleContinue = () => {
     if (selectedSeats.length === 0) {
       Alert.alert(
-        "Selection Required",
-        "Please select at least one seat to continue."
+        "Chưa chọn ghế",
+        "Vui lòng chọn ít nhất một ghế để tiếp tục."
       );
       return;
     }
@@ -208,13 +209,21 @@ const SeatSelection = ({ route, navigation }) => {
           <FontAwesome5 name="arrow-left" size={24} color="#ffffff" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.header}>Departure Date</Text>
+          <Text style={styles.header}>Ngày Khởi Hành</Text>
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
       </View>
       <ScrollView>
         {/* Lower and Upper Deck Seats */}
-        <Text style={styles.tierHeader}>Tầng dưới</Text>
+        <View style={styles.sectionHeader}>
+          <FontAwesome5
+            name="bus-alt"
+            size={20}
+            color="#4CAF50"
+            style={styles.sectionIcon}
+          />
+          <Text style={styles.tierHeader}>Tầng dưới</Text>
+        </View>
         <View style={styles.row}>
           {seats.lower.map((seat) => (
             <TouchableOpacity
@@ -230,11 +239,24 @@ const SeatSelection = ({ route, navigation }) => {
               onPress={() => handleSeatSelect(seat)}
               disabled={!seat.isAvailable && seat.lockedBy !== userId} // Không cho chọn nếu bị khóa bởi người khác
             >
+              <MaterialCommunityIcons
+                name="seat-recline-extra"
+                size={24}
+                color="#ffffff"
+              />
               <Text style={styles.seatText}>{seat.seatNumber}</Text>
             </TouchableOpacity>
           ))}
         </View>
-        <Text style={styles.tierHeader}>tầng trên</Text>
+        <View style={styles.sectionHeader}>
+          <FontAwesome5
+            name="bus-alt"
+            size={20}
+            color="#FF9800"
+            style={styles.sectionIcon}
+          />
+          <Text style={styles.tierHeader}>Tầng trên</Text>
+        </View>
         <View style={styles.row}>
           {seats.upper.map((seat) => (
             <TouchableOpacity
@@ -250,6 +272,11 @@ const SeatSelection = ({ route, navigation }) => {
               onPress={() => handleSeatSelect(seat)}
               disabled={!seat.isAvailable}
             >
+              <MaterialCommunityIcons
+                name="seat-passenger"
+                size={24}
+                color="#ffffff"
+              />
               <Text style={styles.seatText}>{seat.seatNumber}</Text>
             </TouchableOpacity>
           ))}
@@ -258,8 +285,7 @@ const SeatSelection = ({ route, navigation }) => {
       <View style={styles.footer}>
         <Text style={styles.statusSold}>Đã bán</Text>
         <Text style={styles.statusAvailable}>Trống</Text>
-        <Text style={styles.statusSelected}>Selected</Text>
-        <Text style={styles.statustempSelected}>đang chọn</Text>
+        <Text style={styles.statustempSelected}>Đang chọn</Text>
       </View>
       <Text style={styles.selectedSeatsContainer}>Ghế đã chọn:</Text>
       <ScrollView>
@@ -288,7 +314,7 @@ const SeatSelection = ({ route, navigation }) => {
 
       <View style={styles.buttonFooter}>
         <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Tiếp Tục</Text>
         </TouchableOpacity>
       </View>
     </View>
