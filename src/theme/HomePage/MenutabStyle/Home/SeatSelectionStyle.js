@@ -72,6 +72,31 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 16,
   },
+  sectionContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    borderRadius: 10,
+    backgroundColor: "#f9f9f9",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 2, // Hiệu ứng bóng trên Android
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  sectionIcon: {
+    marginRight: 10,
+  },
+  tierHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#2C3E50",
+  },
   statusSold: {
     backgroundColor: "#dc3545",
     paddingVertical: 8,
@@ -81,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginRight: 10,
-    width: 70,
+    width: 100,
     height: 40,
   },
   statusAvailable: {
@@ -93,7 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginRight: 10,
-    width: 70,
+    width: 100,
     height: 40,
   },
   statusSelected: {
@@ -104,10 +129,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
-    width: 70,
+    width: 100,
     height: 40,
   },
-  statustempSelected:{
+  statustempSelected: {
     backgroundColor: "#ffa500",
     paddingVertical: 8,
     paddingHorizontal: 15,
@@ -115,7 +140,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
-    width: 70,
+    width: 100,
     height: 40,
   },
   buttonFooter: {
