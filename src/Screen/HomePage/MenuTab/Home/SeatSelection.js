@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import axios from "axios";
-import config from "../../../../../config";
+import io from "socket.io-client";
+import config from "../../../../../config"; // Ensure SOCKET_URL is correctly defined here
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/SeatSelectionStyle";
+import { useSelector } from "react-redux";
 
 const SeatSelection = ({ route, navigation }) => {
   const { tripId, departureDate } = route.params;
@@ -18,12 +20,138 @@ const SeatSelection = ({ route, navigation }) => {
   const [seats, setSeats] = useState({ lower: [], upper: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0); // State để lưu tổng giá tiền
+  const [totalPrice, setTotalPrice] = useState(0);
+  const socketRef = useRef(null);
+  const userId = useSelector((state) => state.user.userInfo.id);
+  console.log(userId);
+  useEffect(() => {
+    // Initialize socket connection
+    socketRef.current = io(config.SOCKET_URL, {
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socketRef.current.emit("joinTrip", tripId, (ack) => {
+      if (ack.success) {
+        console.log("Successfully joined trip room:", tripId);
+      } else {
+        console.error("Failed to join trip room:", tripId);
+      }
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+      setError("Unable to connect to booking service. Please try again later.");
+    });
+
+    // Lắng nghe sự kiện ghế bị khóa (chọn bởi tài khoản khác)
+    socketRef.current.on("seatLocked", ({ tripId, seatNumber, lockedBy }) => {
+      setSeats((prevSeats) => ({
+        lower: prevSeats.lower.map((seat) =>
+          seat.seatNumber === seatNumber
+            ? {
+                ...seat,
+                isAvailable: lockedBy === userId,
+                lockedBy,
+              }
+            : seat
+        ),
+        upper: prevSeats.upper.map((seat) =>
+          seat.seatNumber === seatNumber
+            ? {
+                ...seat,
+                isAvailable: lockedBy === userId,
+                lockedBy,
+              }
+            : seat
+        ),
+      }));
+    });
+
+    // Lắng nghe sự kiện ghế được mở khóa (bỏ chọn bởi tài khoản khác)
+    socketRef.current.on("seatReleased", ({ tripId, seatNumber }) => {
+      setSeats((prevSeats) => ({
+        lower: prevSeats.lower.map((seat) =>
+          seat.seatNumber === seatNumber
+            ? { ...seat, isAvailable: true, lockedBy: null }
+            : seat
+        ),
+        upper: prevSeats.upper.map((seat) =>
+          seat.seatNumber === seatNumber
+            ? { ...seat, isAvailable: true, lockedBy: null }
+            : seat
+        ),
+      }));
+    });
+
+    return () => {
+      socketRef.current.off("seatLocked");
+      socketRef.current.off("seatReleased");
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchSeats = async () => {
+      try {
+        const response = await axios.get(
+          `${config.BASE_URL}/trips/${tripId}/seats`
+        );
+        const seatData = response.data.data;
+
+        if (seatData && seatData.lower && seatData.upper) {
+          setSeats(seatData);
+        } else {
+          setSeats({ lower: [], upper: [] });
+          console.error("Invalid seat data:", seatData);
+        }
+      } catch (err) {
+        setError("Unable to load seats.");
+        console.error("Error fetching seat data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSeats();
+  }, [tripId]);
+
+  const handleSeatSelect = (seat) => {
+    // Nếu ghế bị khóa bởi người khác, không cho phép chọn hoặc bỏ chọn
+    if (!seat.isAvailable && seat.lockedBy !== userId) {
+      Alert.alert("Ghế không khả dụng", "Ghế này đã được chọn bởi người khác.");
+      return;
+    }
+
+    if (selectedSeats.includes(seat._id)) {
+      // Bỏ chọn ghế
+      socketRef.current.emit("releaseSeat", {
+        tripId,
+        seatNumber: seat.seatNumber,
+        userId,
+      });
+
+      setSelectedSeats((prev) => prev.filter((id) => id !== seat._id));
+      setTotalPrice((prevPrice) => prevPrice - seat.price);
+    } else {
+      // Chọn ghế
+      socketRef.current.emit("reserveSeat", {
+        tripId,
+        seatNumber: seat.seatNumber,
+        userId,
+      });
+
+      setSelectedSeats((prev) => [...prev, seat._id]);
+      setTotalPrice((prevPrice) => prevPrice + seat.price);
+    }
+  };
+
   const handleContinue = () => {
     if (selectedSeats.length === 0) {
       Alert.alert(
-        "Thông báo",
-        "Bạn chưa chọn ghế nào. Vui lòng chọn ít nhất một ghế để tiếp tục."
+        "Selection Required",
+        "Please select at least one seat to continue."
       );
       return;
     }
@@ -43,66 +171,8 @@ const SeatSelection = ({ route, navigation }) => {
       departureDate,
     });
   };
-  useEffect(() => {
-    const fetchSeats = async () => {
-      try {
-        const response = await axios.get(
-          `${config.BASE_URL}/trips/${tripId}/seats`
-        );
-        const seatData = response.data.data;
 
-        // console.log("Dữ liệu ghế trả về từ API:", seatData); 
-
-        if (
-          seatData &&
-          seatData.lower &&
-          Array.isArray(seatData.lower) &&
-          seatData.upper &&
-          Array.isArray(seatData.upper)
-        ) {
-          setSeats(seatData);
-        } else {
-          console.error("Dữ liệu không đúng cấu trúc:", seatData);
-          setSeats({ lower: [], upper: [] });
-        }
-      } catch (err) {
-        console.error("Lỗi khi lấy dữ liệu ghế:", err);
-        setError("Không thể tải ghế.");
-        setSeats({ lower: [], upper: [] });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSeats();
-  }, [tripId]);
-
-  const handleSeatSelect = (seat) => {
-    // Nếu ghế đã được chọn (có trong selectedSeats), thì bỏ chọn ghế đó
-    if (selectedSeats.includes(seat._id)) {
-      setSelectedSeats((prevSeats) =>
-        prevSeats.filter((id) => id !== seat._id)
-      );
-      setTotalPrice(totalPrice - seat.price); // Trừ giá ghế khi bỏ chọn
-    } else {
-      // Nếu số ghế đã chọn nhỏ hơn 3, cho phép chọn thêm ghế
-      if (selectedSeats.length < 3) {
-        setSelectedSeats((prevSeats) => [...prevSeats, seat._id]); // Thêm ghế vào danh sách
-        setTotalPrice(totalPrice + seat.price); // Cộng giá ghế khi chọn mới
-      } else {
-        alert("Bạn chỉ có thể chọn tối đa 3 ghế."); // Thông báo khi vượt quá 3 ghế
-      }
-    }
-    console.log("Ghế đã chọn:", seat);
-    // Cập nhật tổng giá tiền
-    const updatedTotalPrice = selectedSeats.includes(seat._id)
-      ? totalPrice - seat.price // Nếu ghế đã chọn, trừ giá
-      : totalPrice + seat.price; // Nếu ghế chưa chọn, cộng giá
-    setTotalPrice(updatedTotalPrice);
-
-    console.log("Ghế đã chọn nè :", seat);
-  };
-
+  // Format the departure date
   const formattedDate = new Date(departureDate).toLocaleString("vi-VN", {
     weekday: "long",
     year: "numeric",
@@ -114,7 +184,7 @@ const SeatSelection = ({ route, navigation }) => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#ff6347" />
-        <Text>Đang tải ghế...</Text>
+        <Text>Loading seats...</Text>
       </View>
     );
   }
@@ -138,36 +208,33 @@ const SeatSelection = ({ route, navigation }) => {
           <FontAwesome5 name="arrow-left" size={24} color="#ffffff" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.header}>Ngày đi</Text>
+          <Text style={styles.header}>Departure Date</Text>
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
       </View>
-
       <ScrollView>
-        {/* Hiển thị ghế tầng 1 (lower) */}
-        <Text style={styles.tierHeader}>Tầng 1 (Lower)</Text>
+        {/* Lower and Upper Deck Seats */}
+        <Text style={styles.tierHeader}>Tầng dưới</Text>
         <View style={styles.row}>
           {seats.lower.map((seat) => (
             <TouchableOpacity
               key={seat._id}
               style={[
                 styles.seat,
-                !seat.isAvailable
-                  ? styles.sold // Ghế đã bán
-                  : selectedSeats.includes(seat._id)
-                  ? styles.selected // Ghế đang chọn
-                  : styles.available, // Ghế còn trống
+                !seat.isAvailable && seat.lockedBy !== userId // Ghế bị khóa bởi người khác
+                  ? styles.sold
+                  : selectedSeats.includes(seat._id) // Ghế được bạn chọn
+                  ? styles.selected
+                  : styles.available, // Ghế trống
               ]}
               onPress={() => handleSeatSelect(seat)}
-              disabled={!seat.isAvailable}
+              disabled={!seat.isAvailable && seat.lockedBy !== userId} // Không cho chọn nếu bị khóa bởi người khác
             >
               <Text style={styles.seatText}>{seat.seatNumber}</Text>
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* Hiển thị ghế tầng 2 (upper) */}
-        <Text style={styles.tierHeader}>Tầng 2 (Upper)</Text>
+        <Text style={styles.tierHeader}>tầng trên</Text>
         <View style={styles.row}>
           {seats.upper.map((seat) => (
             <TouchableOpacity
@@ -175,10 +242,10 @@ const SeatSelection = ({ route, navigation }) => {
               style={[
                 styles.seat,
                 !seat.isAvailable
-                  ? styles.sold // Ghế đã bán
+                  ? styles.sold
                   : selectedSeats.includes(seat._id)
-                  ? styles.selected // Ghế đang chọn
-                  : styles.available, // Ghế còn trống
+                  ? styles.selected
+                  : styles.available,
               ]}
               onPress={() => handleSeatSelect(seat)}
               disabled={!seat.isAvailable}
@@ -190,45 +257,38 @@ const SeatSelection = ({ route, navigation }) => {
       </ScrollView>
       <View style={styles.footer}>
         <Text style={styles.statusSold}>Đã bán</Text>
-        <Text style={styles.statusAvailable}>Còn trống</Text>
-        <Text style={styles.statusSelected}>Đang chọn</Text>
+        <Text style={styles.statusAvailable}>Trống</Text>
+        <Text style={styles.statusSelected}>Selected</Text>
+        <Text style={styles.statustempSelected}>đang chọn</Text>
       </View>
-
-      {/* Hiển thị danh sách ghế đã chọn */}
       <Text style={styles.selectedSeatsContainer}>Ghế đã chọn:</Text>
       <ScrollView>
         <View style={styles.selectedSeatsContainer}>
           {selectedSeats.map((seatId) => {
-            // Tìm ghế tương ứng với ID trong selectedSeats
             const seat = [...seats.lower, ...seats.upper].find(
-              (s) => s._id === seatId // Sử dụng _id để so sánh
+              (s) => s._id === seatId
             );
-            // In ra thông tin ghế để kiểm tra
-            console.log("Thông tin ghế đã chọn:", seat);
             if (seat) {
               return (
                 <View key={seatId} style={styles.selectedSeatItem}>
-                  <Text>Số ghế: {seat.seatNumber}</Text>
-                  <Text>Giá: {seat.price} VNĐ</Text>
-                  <Text>Hàng: {seat.seatRow}</Text>
-                  <Text>Tầng: {seat.floor}</Text>
+                  <Text>Seat: {seat.seatNumber}</Text>
+                  <Text>Price: {seat.price} VNĐ</Text>
+                  <Text>Row: {seat.seatRow}</Text>
+                  <Text>Deck: {seat.floor}</Text>
                 </View>
               );
             }
-
-            // Nếu ghế không tồn tại, không hiển thị gì
             return null;
           })}
-          {/* Hiển thị tổng giá tiền */}
         </View>
       </ScrollView>
       <View style={styles.selectedSeatsContainer}>
-        <Text style={styles.totalPrice}>Tổng giá: {totalPrice} VNĐ</Text>
+        <Text style={styles.totalPrice}>Giá: {totalPrice} VNĐ</Text>
       </View>
 
       <View style={styles.buttonFooter}>
         <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          <Text style={styles.buttonText}>Tiếp tục</Text>
+          <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </View>
