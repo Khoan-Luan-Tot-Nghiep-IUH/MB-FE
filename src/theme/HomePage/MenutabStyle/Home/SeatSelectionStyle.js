@@ -9,25 +9,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#4CAF50", 
-    paddingHorizontal: 16, 
-    width: "100%", 
+    backgroundColor: "#4CAF50",
+    paddingHorizontal: 16,
+    width: "100%",
   },
   backButton: {
-    marginRight: 16, 
+    marginRight: 16,
   },
   titleContainer: {
-    flex: 1, 
-    alignItems: "center", 
+    flex: 1,
+    alignItems: "center",
   },
   header: {
     fontSize: 20,
-    color: "#ffffff", 
-    fontWeight: "bold", 
+    color: "#ffffff",
+    fontWeight: "bold",
   },
   date: {
     fontSize: 16,
-    color: "#ffffff", 
+    color: "#ffffff",
     marginTop: 4, //
   },
   row: {
@@ -48,13 +48,16 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   sold: {
-    backgroundColor: "#dc3545", 
+    backgroundColor: "#dc3545",
   },
   available: {
-    backgroundColor: "#28a745", 
+    backgroundColor: "#28a745",
   },
   selected: {
-    backgroundColor: "#ffa500", 
+    backgroundColor: "#ffa500",
+  },
+  tempSelected: {
+    backgroundColor: "#ffcc00", // Temporary selected seat color
   },
   seatText: {
     color: "#ffffff",
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   statusSold: {
-    backgroundColor: "#dc3545", 
+    backgroundColor: "#dc3545",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
@@ -78,11 +81,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginRight: 10,
-    width: 100, 
-    height: 40, 
+    width: 70,
+    height: 40,
   },
   statusAvailable: {
-    backgroundColor: "#28a745", 
+    backgroundColor: "#28a745",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
@@ -90,21 +93,31 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginRight: 10,
-    width: 100, 
-    height: 40, 
+    width: 70,
+    height: 40,
   },
   statusSelected: {
-    backgroundColor: "#ffa500", 
+    backgroundColor: "#ffa500",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
-    width: 100, 
-    height: 40, 
+    width: 70,
+    height: 40,
   },
-
+  statustempSelected:{
+    backgroundColor: "#ffa500",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    width: 70,
+    height: 40,
+  },
   buttonFooter: {
     paddingLeft: 20,
   },
