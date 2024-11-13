@@ -8,9 +8,11 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import config from "../../../config";
-const Resgister = () => {
+
+const Register = ({ navigation }) => {
   const [formData, setFormData] = useState({
     email: "",
     userName: "",
@@ -19,6 +21,7 @@ const Resgister = () => {
     phoneNumber: "",
     address: "",
     birthDay: "",
+    verificationMethod: "email",
   });
 
   const handleInputChange = (name, value) => {
@@ -26,23 +29,30 @@ const Resgister = () => {
   };
 
   const handleRegister = async () => {
-    // console.log(`${config.BASE_URL}/user/register`);
     try {
-      const response = await axios.post(`${config.BASE_URL}/user/register`,
+      const response = await axios.post(
+        `${config.BASE_URL}/user/register`,
         formData
       );
       const data = response.data;
-      console.log(data);
+
       if (data.success) {
-        Alert.alert("Success", data.msg);
+        Alert.alert("Thành Công", data.msg);
+        navigation.navigate("VerificationScreen", {
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          verificationMethod: formData.verificationMethod,
+          userName: formData.userName,
+          password: formData.password,
+        });
       } else {
-        Alert.alert("Error", data.msg);
+        Alert.alert("Lỗi", data.msg);
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Đăng ký thất bại:", error);
       Alert.alert(
-        "Registration Failed",
-        error.response?.data?.msg || error.message || "Có lỗi xảy ra"
+        "Đăng ký thất bại",
+        error.response?.data?.msg || "Có lỗi xảy ra, vui lòng thử lại."
       );
     }
   };
@@ -92,6 +102,19 @@ const Resgister = () => {
         value={formData.birthDay}
         onChangeText={(value) => handleInputChange("birthDay", value)}
       />
+      <View style={styles.pickerContainer}>
+        <Text>Phương Thức Xác Nhận:</Text>
+        <Picker
+          selectedValue={formData.verificationMethod}
+          style={styles.picker}
+          onValueChange={(value) =>
+            handleInputChange("verificationMethod", value)
+          }
+        >
+          <Picker.Item label="Email" value="email" />
+          <Picker.Item label="Số Điện Thoại" value="phone" />
+        </Picker>
+      </View>
       <Button title="Đăng Ký" onPress={handleRegister} />
     </ScrollView>
   );
@@ -118,6 +141,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
   },
+  pickerContainer: {
+    marginBottom: 15,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+  },
 });
 
-export default Resgister;
+export default Register;

@@ -28,7 +28,10 @@ const userSlice = createSlice({
       state.userInfo = action.payload;
       AsyncStorage.setItem("user", JSON.stringify(action.payload));
     },
-
+    loginSuccess: (state, action) => {
+      state.userInfo = action.payload; // Lưu thông tin người dùng vào Redux
+      AsyncStorage.setItem("user", JSON.stringify(action.payload)); // Lưu thông tin vào AsyncStorage
+    },
     logout: (state) => {
       state.userInfo = null;
       AsyncStorage.removeItem("user");
@@ -55,5 +58,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, updateUserInfo } = userSlice.actions;
+export const { setCredentials, logout, updateUserInfo, loginSuccess } =
+  userSlice.actions;
 export default userSlice.reducer;
