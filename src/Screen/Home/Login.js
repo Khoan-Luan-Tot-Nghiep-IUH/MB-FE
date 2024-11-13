@@ -160,7 +160,12 @@ const Login = ({ navigation }) => {
           <Text style={styles.socialButtonText}>Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialButton}>
+        <TouchableOpacity
+          style={styles.socialButton}
+          onPress={() =>
+            Alert.alert("Thông báo", "Tính năng đang được chúng tôi phát triển")
+          }
+        >
           <Image
             style={styles.socialIcon}
             source={{

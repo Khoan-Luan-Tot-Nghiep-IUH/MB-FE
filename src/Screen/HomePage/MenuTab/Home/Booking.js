@@ -81,7 +81,7 @@ const Booking = ({ route, navigation }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Icon name="arrow-left" size={20} color="#333" />
+          <Icon name="arrow-left" size={20} color="#fff" />
           <Text style={styles.backButtonText}>Quay lại</Text>
         </TouchableOpacity>
 
@@ -92,7 +92,7 @@ const Booking = ({ route, navigation }) => {
         <Image source={payment} style={styles.imagePlaceholder} />
 
         <View style={styles.paymentMethodContainer}>
-          <Text style={styles.paymentMethodLabel}>Select Payment Method:</Text>
+          <Text style={styles.paymentMethodLabel}>Chọn Phương Thức Thanh Toán:</Text>
           <TouchableOpacity
             style={[
               styles.paymentOption,
