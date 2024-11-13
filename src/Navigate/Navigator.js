@@ -19,6 +19,7 @@ import SeatSelection from "../Screen/HomePage/MenuTab/Home/SeatSelection";
 import Booking from "../Screen/HomePage/MenuTab/Home/Booking";
 import Resgister from "../Screen/Home/Resgister";
 import { loadUserFromStorage } from "../Redux/User/userSlice";
+import HomePage from "../Screen/HomePage/Tabbotom/HomePage";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ const StackNavigator = () => {
       >
         <Stack.Screen name="Main" component={TabNavigator} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="HomePage" component={HomePage} />
         <Stack.Screen name="Resgister" component={Resgister} />
         <Stack.Screen name="IntroCar" component={inrocar} />
         <Stack.Screen
