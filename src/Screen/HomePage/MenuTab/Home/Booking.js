@@ -18,7 +18,7 @@ import styles from "../../../../theme/HomePage/MenutabStyle/Home/BookingStyle";
 import payment from "../../../../../assets/payment.jpg";
 
 const Booking = ({ route, navigation }) => {
-  const { tripId, seatNumbers, totalPrice, departureDate } = route.params;
+  const { tripId, bookingId } = route.params;
   const [paymentMethod, setPaymentMethod] = useState("OnBoard");
   const [loading, setLoading] = useState(false);
   const [qrCodeData, setQrCodeData] = useState(null);
@@ -28,32 +28,32 @@ const Booking = ({ route, navigation }) => {
   const handleBooking = async () => {
     setLoading(true);
     try {
-      const seatNumbersAsIntegers = seatNumbers.map((seat) => parseInt(seat));
       const response = await axios.post(
         `${config.BASE_URL}/bookings`,
         {
-          tripId,
-          seatNumbers: seatNumbersAsIntegers,
+          bookingId: bookingId,
           paymentMethod,
+          voucherCode: "",
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Đảm bảo token người dùng được truyền đúng.
           },
         }
       );
 
       const { data } = response.data;
-      Alert.alert("Success", "Booking confirmed!");
 
+      // Xử lý thành công
+      Alert.alert("Success", "Booking confirmed!");
       if (paymentMethod === "Online") {
         setQrCodeData(data.qrCode);
-        navigation.navigate("Payment", { paymentLink: data.paymentLink });
       } else {
-        navigation.navigate("BookingSuccess", { bookingId: data.bookingId });
+        navigation.navigate("Main", { bookingId: data.bookingId });
       }
     } catch (error) {
-      Alert.alert("Error", error.response?.data.message || "Booking failed.");
+      // Xử lý lỗi
+      Alert.alert("Error", error.response?.data?.message || "Booking failed.");
     } finally {
       setLoading(false);
     }
@@ -70,10 +70,12 @@ const Booking = ({ route, navigation }) => {
       Alert.alert("QR Code Saved", "QR code has been saved to your gallery.");
     });
   };
-
+  const navigate = () => {
+    navigation.navigate("Main");
+  };
   return (
     <View style={styles.container}>
-    <View style={styles.angiang}></View>
+      <View style={styles.angiang}></View>
       <View style={styles.headerContainerBooking}>
         <TouchableOpacity
           style={styles.backButton}
@@ -141,7 +143,9 @@ const Booking = ({ route, navigation }) => {
           ) : (
             <View style={styles.confirmButtonContent}>
               <Icon name="check-circle" size={18} color="#fff" />
-              <Text style={styles.confirmButtonText}>Confirm Booking</Text>
+              <Text style={styles.confirmButtonText} onPress={navigate}>
+                Confirm Booking
+              </Text>
             </View>
           )}
         </TouchableOpacity>

@@ -24,6 +24,7 @@ const SeatSelection = ({ route, navigation }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const socketRef = useRef(null);
   const userId = useSelector((state) => state.user.userInfo.id);
+  const yourAuthToken = useSelector((state) => state.user.userInfo.token);
   console.log(userId);
   useEffect(() => {
     // Initialize socket connection
@@ -148,7 +149,7 @@ const SeatSelection = ({ route, navigation }) => {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (selectedSeats.length === 0) {
       Alert.alert(
         "Chưa chọn ghế",
@@ -156,21 +157,53 @@ const SeatSelection = ({ route, navigation }) => {
       );
       return;
     }
-    const selectedSeatNumbers = selectedSeats
-      .map((seatId) => {
-        const seat = [...seats.lower, ...seats.upper].find(
-          (s) => s._id === seatId
-        );
-        return seat ? seat.seatNumber : null;
-      })
-      .filter((seatNumber) => seatNumber !== null);
+    try {
+      const selectedSeatNumbers = selectedSeats
+        .map((seatId) => {
+          const seat = [...seats.lower, ...seats.upper].find(
+            (s) => s._id === seatId
+          );
+          return seat ? seat.seatNumber : null;
+        })
+        .filter((seatNumber) => seatNumber !== null);
 
-    navigation.navigate("Booking", {
-      tripId,
-      seatNumbers: selectedSeatNumbers,
-      totalPrice,
-      departureDate,
-    });
+      // Gọi API để tạo booking draft
+      const response = await axios.post(
+        `${config.BASE_URL}/bookings-confirm`,
+        {
+          tripId,
+          seatNumbers: selectedSeatNumbers,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${yourAuthToken}`, // Thay bằng token của bạn
+          },
+        }
+      );
+      console.log(response.data.data);
+      if (response.data.success) {
+        const { bookingId, expiryTime, totalPrice } = response.data.data;
+
+        // Điều hướng tới màn hình xác nhận với thông tin booking
+        navigation.navigate("Booking", {
+          bookingId,
+          expiryTime,
+          totalPrice,
+        });
+      } else {
+        Alert.alert(
+          "Đặt chỗ thất bại",
+          response.data.message || "Có lỗi xảy ra, vui lòng thử lại."
+        );
+      }
+    } catch (error) {
+      console.error("Error confirming booking:", error);
+      Alert.alert(
+        "Lỗi",
+        error.response?.data?.message ||
+          "Không thể thực hiện đặt chỗ. Vui lòng thử lại sau."
+      );
+    }
   };
 
   // Format the departure date
