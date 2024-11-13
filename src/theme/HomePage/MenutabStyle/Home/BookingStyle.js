@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-    backgroundColor: "#33CC66", // Màu nền xám nhẹ
+    backgroundColor: "#f4f4f9", // Màu nền xám nhẹ
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4, // Cho Android
   },
-  angiang:{
-  marginBottom: 25,
+  angiang: {
+    marginBottom: 27,
   },
   header1: {
     padding: 10,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginTop: 10,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#28a745",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -101,11 +101,10 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flexDirection: "row",
- 
   },
   backButtonText: {
     marginLeft: 5,
-    color: "#333",
+    color: "#fff",
     fontSize: 16,
   },
   headerContainerBooking: {
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 10,
-    backgroundColor: "#28A745",
+    backgroundColor: "#22ba3b",
   },
 });
 

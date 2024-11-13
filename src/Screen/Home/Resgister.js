@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   Alert,
   StyleSheet,
   ScrollView,
@@ -56,97 +56,144 @@ const Register = ({ navigation }) => {
       );
     }
   };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Đăng Ký Người Dùng</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={formData.email}
-        onChangeText={(value) => handleInputChange("email", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Tên Người Dùng"
-        value={formData.userName}
-        onChangeText={(value) => handleInputChange("userName", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mật Khẩu"
-        secureTextEntry
-        value={formData.password}
-        onChangeText={(value) => handleInputChange("password", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Họ và Tên"
-        value={formData.fullName}
-        onChangeText={(value) => handleInputChange("fullName", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Số Điện Thoại"
-        value={formData.phoneNumber}
-        onChangeText={(value) => handleInputChange("phoneNumber", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Địa Chỉ"
-        value={formData.address}
-        onChangeText={(value) => handleInputChange("address", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Ngày Sinh (YYYY-MM-DD)"
-        value={formData.birthDay}
-        onChangeText={(value) => handleInputChange("birthDay", value)}
-      />
-      <View style={styles.pickerContainer}>
-        <Text>Phương Thức Xác Nhận:</Text>
-        <Picker
-          selectedValue={formData.verificationMethod}
-          style={styles.picker}
-          onValueChange={(value) =>
-            handleInputChange("verificationMethod", value)
-          }
-        >
-          <Picker.Item label="Email" value="email" />
-          <Picker.Item label="Số Điện Thoại" value="phone" />
-        </Picker>
+      <View style={styles.card}>
+        <Text style={styles.title}>Tạo Tài Khoản</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#aaa"
+          value={formData.email}
+          onChangeText={(value) => handleInputChange("email", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Tên Người Dùng"
+          placeholderTextColor="#aaa"
+          value={formData.userName}
+          onChangeText={(value) => handleInputChange("userName", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Mật Khẩu"
+          placeholderTextColor="#aaa"
+          secureTextEntry
+          value={formData.password}
+          onChangeText={(value) => handleInputChange("password", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Họ và Tên"
+          placeholderTextColor="#aaa"
+          value={formData.fullName}
+          onChangeText={(value) => handleInputChange("fullName", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Số Điện Thoại"
+          placeholderTextColor="#aaa"
+          value={formData.phoneNumber}
+          onChangeText={(value) => handleInputChange("phoneNumber", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Địa Chỉ"
+          placeholderTextColor="#aaa"
+          value={formData.address}
+          onChangeText={(value) => handleInputChange("address", value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Ngày Sinh (YYYY-MM-DD)"
+          placeholderTextColor="#aaa"
+          value={formData.birthDay}
+          onChangeText={(value) => handleInputChange("birthDay", value)}
+        />
+        <View style={styles.pickerContainer}>
+          <Text style={styles.label}>Phương Thức Xác Nhận:</Text>
+          <Picker
+            selectedValue={formData.verificationMethod}
+            style={styles.picker}
+            onValueChange={(value) =>
+              handleInputChange("verificationMethod", value)
+            }
+          >
+            <Picker.Item label="Email" value="email" />
+            <Picker.Item label="Số Điện Thoại" value="phone" />
+          </Picker>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Đăng Ký</Text>
+        </TouchableOpacity>
       </View>
-      <Button title="Đăng Ký" onPress={handleRegister} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flexGrow: 1,
-    backgroundColor: "#f5f5f5",
     justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f0f4f8",
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: "#333",
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    borderRadius: 8,
+    paddingHorizontal: 15,
     marginBottom: 15,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+    color: "#333",
   },
   pickerContainer: {
-    marginBottom: 15,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    backgroundColor: "#f9f9f9",
+    padding: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "#555",
   },
   picker: {
     height: 50,
     width: "100%",
+  },
+  button: {
+    backgroundColor: "#3498db",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
