@@ -20,6 +20,9 @@ import Booking from "../Screen/HomePage/MenuTab/Home/Booking";
 import Resgister from "../Screen/Home/Resgister";
 import { loadUserFromStorage } from "../Redux/User/userSlice";
 import HomePage from "../Screen/HomePage/Tabbotom/HomePage";
+import VerificationScreen from "../Screen/Home/VerificationScreen";
+import ForgotPassword from "../Screen/Home/ForgotPassword";
+import ResetPassword from "../Screen/Home/ResetPassword";
 
 const Stack = createStackNavigator();
 
@@ -42,7 +45,14 @@ const StackNavigator = () => {
         <Stack.Screen name="Main" component={TabNavigator} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
         <Stack.Screen name="Resgister" component={Resgister} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          initialParams={{ token: "" }} // Token sẽ được truyền từ email
+        />
         <Stack.Screen name="IntroCar" component={inrocar} />
         <Stack.Screen
           name="OperatingCar"
