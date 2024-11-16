@@ -23,6 +23,7 @@ import HomePage from "../Screen/HomePage/Tabbotom/HomePage";
 import VerificationScreen from "../Screen/Home/VerificationScreen";
 import ForgotPassword from "../Screen/Home/ForgotPassword";
 import ResetPassword from "../Screen/Home/ResetPassword";
+import VerifyResetCodeScreen from "../Screen/Home/VerifyResetCodeScreen ";
 
 const Stack = createStackNavigator();
 
@@ -45,9 +46,16 @@ const StackNavigator = () => {
         <Stack.Screen name="Main" component={TabNavigator} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomePage" component={HomePage} />
-        <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
+        <Stack.Screen
+          name="VerificationScreen"
+          component={VerificationScreen}
+        />
         <Stack.Screen name="Resgister" component={Resgister} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen
+          name="VerifyResetCodeScreen"
+          component={VerifyResetCodeScreen}
+        />
         <Stack.Screen
           name="ResetPassword"
           component={ResetPassword}

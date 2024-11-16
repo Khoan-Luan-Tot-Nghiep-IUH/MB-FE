@@ -10,6 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome5 } from "@expo/vector-icons";
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/SearchResultsPage";
+import { Image } from "react-native";
 
 const SearchResultsPage = ({ route, navigation }) => {
   // Check existence of route.params and necessary values
@@ -107,10 +108,14 @@ const SearchResultsPage = ({ route, navigation }) => {
           <FontAwesome5 name="arrow-left" size={20} color="#ffffff" />
         </TouchableOpacity>
         <View style={styles.tripInfoContainer}>
-          <Text
-            style={styles.tripInfo1}
-          >{`TP. ${departureLocation} → ${arrivalLocation}`}</Text>
-          <Text style={styles.dateInfo}>{departureDate}</Text>
+          <Text style={styles.tripInfo1}>
+            <FontAwesome5 name="map-signs" size={20} color="#ffffff" />{" "}
+            {`TP. ${departureLocation} → ${arrivalLocation}`}
+          </Text>
+          <Text style={styles.dateInfo}>
+            <FontAwesome5 name="calendar-alt" size={16} color="#ffffff" />{" "}
+            {departureDate}
+          </Text>
         </View>
       </View>
 
@@ -118,7 +123,9 @@ const SearchResultsPage = ({ route, navigation }) => {
       <View style={styles.filterContainer}>
         <View style={styles.filterRow}>
           <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Giá:</Text>
+            <Text style={styles.filterLabel}>
+              <FontAwesome5 name="dollar-sign" size={16} color="#333" /> Giá:
+            </Text>
             <Picker
               selectedValue={JSON.stringify(priceRange)}
               style={styles.picker}
@@ -149,7 +156,9 @@ const SearchResultsPage = ({ route, navigation }) => {
             </Picker>
           </View>
           <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Loại Xe:</Text>
+            <Text style={styles.filterLabel}>
+              <FontAwesome5 name="bus" size={16} color="#333" /> Loại Xe:
+            </Text>
             <Picker
               selectedValue={busTypeFilter}
               style={styles.picker}
@@ -158,24 +167,6 @@ const SearchResultsPage = ({ route, navigation }) => {
               <Picker.Item label="Tất cả" value="Tất cả" />
               <Picker.Item label="Limousine" value="Limousine" />
               <Picker.Item label="Ghế" value="Lamborghini" />
-              <Picker.Item label="Ghế" value="Mescerdes" />
-              <Picker.Item label="Ghế" value="Xe Bus" />
-              <Picker.Item label="Ghế" value="Mescerdes" />
-              <Picker.Item label="Ghế" value="Mescerdes" />
-            </Picker>
-          </View>
-          <View style={styles.filterItem}>
-            <Text style={styles.filterLabel}>Giờ:</Text>
-            <Picker
-              selectedValue={departureTimeRange.min}
-              style={styles.picker}
-              onValueChange={(itemValue) =>
-                setDepartureTimeRange({ ...departureTimeRange, min: itemValue })
-              }
-            >
-              {[...Array(24)].map((_, i) => (
-                <Picker.Item key={i} label={`${i}:00`} value={i.toString()} />
-              ))}
             </Picker>
           </View>
         </View>
@@ -214,21 +205,39 @@ const SearchResultsPage = ({ route, navigation }) => {
                 onPress={() => navigation.navigate("DetailsTicket", { trip })}
               >
                 <View style={styles.tripInfo}>
-                  <Text style={styles.tripTime}>{departureTime}</Text>
+                  <Text style={styles.tripTime}>
+                    <FontAwesome5 name="clock" size={16} color="blue" />{" "}
+                    {departureTime}
+                  </Text>
                   <Text style={styles.arrow}>→</Text>
-                  <Text style={styles.tripTime}>{arrivalTime}</Text>
+                  <Text style={styles.tripTime}>
+                    <FontAwesome5 name="clock" size={16} color="red" />{" "}
+                    {arrivalTime}
+                  </Text>
                 </View>
                 <Text style={styles.tripPrice}>
+                  <FontAwesome5
+                    name="money-bill-wave"
+                    size={16}
+                    color="green"
+                  />{" "}
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   }).format(trip.basePrice)}
                 </Text>
                 <Text style={styles.busType}>
+                  <FontAwesome5 name="bus-alt" size={16} color="gray" />{" "}
                   {trip.busType?.name || "Không xác định"}
                 </Text>
                 <Text style={styles.seatStatus}>
-                  Còn {trip.availableSeats} chỗ
+                  <FontAwesome5 name="chair" size={16} color="brown" /> Còn{" "}
+                  {trip.availableSeats} chỗ
+                </Text>
+                {console.log(trip.companyId?.name)}
+                <Text style={styles.seatStatus}>
+                  <FontAwesome5 name="chair" size={16} color="brown" />
+                  {trip.companyId?.name}
                 </Text>
                 <View style={styles.tripLocation}>
                   <FontAwesome5 name="map-marker-alt" size={16} color="green" />
@@ -236,9 +245,30 @@ const SearchResultsPage = ({ route, navigation }) => {
                     {trip.departureLocation.name} → {trip.arrivalLocation.name}
                   </Text>
                 </View>
-                <Text>
-                  {trip.isRoundTrip ? "Có khứ hồi" : "Không có khứ hồi"}
-                </Text>
+                {trip.isRoundTrip && (
+                  <Text style={{ marginVertical: 8 }}>
+                    <FontAwesome5 name="exchange-alt" size={16} color="blue" />{" "}
+                    Có khứ hồi
+                  </Text>
+                )}
+                {trip.busType?.images?.length > 0 ? (
+                  <Image
+                    source={{ uri: trip.busType?.images?.[0] }}
+                    style={{
+                      width: 190,
+                      height: 120,
+                      borderRadius: 10,
+                      marginTop: 8,
+                    }}
+                  />
+                ) : (
+                  <View>
+                    <FontAwesome5 name="image" size={50} color="#ccc" />
+                    <Text style={{ color: "#888", marginTop: 8 }}>
+                      Không có hình ảnh
+                    </Text>
+                  </View>
+                )}
               </TouchableOpacity>
             );
           })}
