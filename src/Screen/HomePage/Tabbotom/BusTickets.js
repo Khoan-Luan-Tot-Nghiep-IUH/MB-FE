@@ -63,15 +63,13 @@ const BusTickets = () => {
       });
       setError(null); // Reset error if data is successfully fetched
     } catch (err) {
-      console.error("Error fetching booking history:", err);
-      setError("Lỗi khi tải dữ liệu lịch sử đặt vé");
     } finally {
       setLoading(false);
     }
   };
   useEffect(() => {
-    fetchBookingHistory(); 
-  }, []); 
+    fetchBookingHistory();
+  }, []);
 
   const renderActiveTabComponent = () => {
     switch (activeTab) {
@@ -94,7 +92,6 @@ const BusTickets = () => {
       </View>
     );
   }
-
   if (error) {
     return (
       <View style={styles.errorContainer}>
@@ -102,7 +99,6 @@ const BusTickets = () => {
       </View>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -129,7 +125,6 @@ const BusTickets = () => {
       <View style={{ flex: 1 }}>{renderActiveTabComponent()}</View>
       {bookings.schedule.length === 0 && activeTab === "Hiện tại" && (
         <View style={styles.content}>
-          <FontAwesome name="code-fork" size={50} color="#4A90E2" />
           <Text style={styles.messageText}>
             Bạn chưa có hành trình nào sắp tới
           </Text>

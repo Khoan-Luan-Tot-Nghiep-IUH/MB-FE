@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 27,
   },
+  image: {
+    width:200,
+    height: 200,
+  },
   header1: {
     marginBottom: 16,
   },
