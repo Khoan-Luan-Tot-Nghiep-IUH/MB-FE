@@ -6,11 +6,13 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons"; // Import icon
 import axios from "axios";
 import config from "../../../../../config";
-
-const TypeCar = () => {
+import styles from "../../../../theme/HomePage/MenutabStyle/Info/TypecardStyle";
+const TypeCar = ({ navigation }) => {
   const [busTypes, setBusTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +23,6 @@ const TypeCar = () => {
         const response = await axios.get(
           `${config.BASE_URL}/bus-types/get-all`
         );
-        console.log(response.data.data);
         setBusTypes(response.data.data);
       } catch (err) {
         setError(err.message);
@@ -29,10 +30,8 @@ const TypeCar = () => {
         setLoading(false);
       }
     };
-
     fetchBusTypes();
   }, []);
-
   if (loading) {
     return (
       <View style={styles.center}>
@@ -41,7 +40,6 @@ const TypeCar = () => {
       </View>
     );
   }
-
   if (error) {
     return (
       <View style={styles.center}>
@@ -49,28 +47,42 @@ const TypeCar = () => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 10 }}></View>
+      <View style={{ marginBottom: 30 }}></View>
+      {/* Header với nút Back */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Loại Xe</Text>
+      </View>
+
+      {/* Danh sách các loại xe */}
       <FlatList
         data={busTypes}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            {item.images && item.images.length > 0 && (
-              <Image source={{ uri: item.images[0] }} style={styles.image} />
-            )}
+            <Image
+              source={{
+                uri: item.images?.[0] || "https://via.placeholder.com/150",
+              }}
+              style={styles.image}
+            />
             <View style={styles.infoContainer}>
-              <Text style={styles.name}>🚍 {item.name}</Text>
+              <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.description}>
-                📋 Mô tả: {item.description}
+                📋 {item.description || "Không có mô tả"}
               </Text>
-              <Text style={styles.seats}>🪑 Số ghế: {item.seats}</Text>
-              <Text style={styles.floorCount}>
-                🛗 Số tầng: {item.floorCount}
+              <Text style={styles.detailText}>🪑 Số ghế: {item.seats}</Text>
+              <Text style={styles.detailText}>
+                🛗 Số tầng: {item.floorCount || "1"}
               </Text>
-              <Text style={styles.companyId}>
+              <Text style={styles.company}>
                 🏢 Công ty: {item.companies?.name || "Chưa rõ"}
               </Text>
             </View>
@@ -82,75 +94,3 @@ const TypeCar = () => {
 };
 
 export default TypeCar;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "#3498db",
-    fontWeight: "500",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#e74c3c",
-    fontWeight: "500",
-  },
-  card: {
-    backgroundColor: "#ffffff",
-    marginBottom: 16,
-    borderRadius: 12,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
-  },
-  image: {
-    width: "100%",
-    height: 180,
-    resizeMode: "cover",
-  },
-  infoContainer: {
-    padding: 16,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2c3e50",
-    marginBottom: 6,
-  },
-  description: {
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#7f8c8d",
-    marginBottom: 6,
-  },
-  seats: {
-    fontSize: 16,
-    color: "#7f8c8d",
-    marginBottom: 6,
-  },
-  floorCount: {
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#34495e",
-    marginBottom: 6,
-  },
-  companyId: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#8e44ad",
-  },
-});

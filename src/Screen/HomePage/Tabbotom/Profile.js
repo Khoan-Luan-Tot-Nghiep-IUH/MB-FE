@@ -23,12 +23,11 @@ const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userInfo);
   const token = useSelector((state) => state.user.userInfo?.token);
-  console.log(token);
+  // console.log(token);
   const [modalVisible, setModalVisible] = useState(false); // Trạng thái hiển thị modal
   const [fullName, setFullName] = useState(user?.fullName || "");
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
-  console.log(fullName);
-  console.log(phoneNumber);
+
   // Hàm xử lý đăng xuất
   const handleLogout = () => {
     dispatch(logout());
@@ -50,7 +49,7 @@ const Profile = () => {
           },
         }
       );
-      console.log("Response from API:", response.data);
+      // console.log("Response from API:", response.data);
       Alert.alert("Thành công", "Cập nhật thông tin thành công");
 
       // Cập nhật Redux với dữ liệu mới từ API
@@ -64,13 +63,17 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
+      <View style={{ marginBottom: 28 }}></View>
+      <View style={styles.header}>
+        {/* Phần thông tin người dùng */}
+        <View style={styles.userInfo}>
           {user ? (
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.welcomeText}>Xin chào, {user.fullName}</Text>
+            <>
+              <Text style={styles.welcomeText}>
+                Xin chào, {user.fullName || "Khách hàng"}
+              </Text>
               <Text style={styles.subTextInfo}>
-                Số điện thoại: {user.phoneNumber}
+                Số điện thoại: {user.phoneNumber || "Không có"}
               </Text>
               <TouchableOpacity
                 onPress={handleLogout}
@@ -78,88 +81,94 @@ const Profile = () => {
               >
                 <Text style={styles.logoutText}>Đăng xuất</Text>
               </TouchableOpacity>
-            </View>
+            </>
           ) : (
-            <View style={styles.loginContainer}>
-              <Text style={styles.loginText}>Bạn chưa đăng nhập</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.subText}>Đăng nhập ngay</Text>
+            <>
+              <Text style={styles.welcomeText}>Bạn chưa đăng nhập</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+                style={styles.loginButton}
+              >
+                <Text style={{ color: "white", fontSize: 16 }}>
+                  Đăng nhập ngay
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+        {/* Icon Profile */}
+        <TouchableOpacity
+          style={styles.profileIconContainer}
+          onPress={() => setModalVisible(true)}
+        >
+          <View style={styles.profileIcon}>
+            <FontAwesome name="user" size={25} color="white" />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.menuContainer}>
+        {menuItems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.menuItem}
+            onPress={() => navigation.navigate(item.screen)}
+          >
+            <FontAwesome
+              name={item.icon}
+              size={24}
+              color="#FF9000"
+              style={styles.icon}
+            />
+            <Text style={styles.menuText}>{item.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={styles.footerText}>
+        Công ty TNHH Du Lịch Vận Tải Thành và Toàn
+      </Text>
+
+      {/* Modal hiển thị và cập nhật thông tin người dùng */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Cập nhật thông tin</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Tên mới"
+              value={fullName}
+              onChangeText={setFullName}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Số điện thoại mới"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={handleUpdate}
+                style={styles.updateButton}
+              >
+                <Text style={styles.updateButtonText}>Cập nhật</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Đóng</Text>
               </TouchableOpacity>
             </View>
-          )}
-          <TouchableOpacity
-            style={styles.profileIconContainer}
-            onPress={() => setModalVisible(true)}
-          >
-            <View style={styles.profileIcon}>
-              <FontAwesome name="user" size={35} color="white" />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.menuContainer}>
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.menuItem}
-              onPress={() => navigation.navigate(item.screen)}
-            >
-              <FontAwesome
-                name={item.icon}
-                size={24}
-                color="#FF9000"
-                style={styles.icon}
-              />
-              <Text style={styles.menuText}>{item.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={styles.footerText}>
-          Công ty TNHH Du Lịch Vận Tải Thành và Toàn
-        </Text>
-
-        {/* Modal hiển thị và cập nhật thông tin người dùng */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Cập nhật thông tin</Text>
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Tên mới"
-                value={fullName}
-                onChangeText={setFullName}
-              />
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Số điện thoại mới"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                keyboardType="phone-pad"
-              />
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={handleUpdate}
-                  style={styles.updateButton}
-                >
-                  <Text style={styles.updateButtonText}>Cập nhật</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setModalVisible(false)}
-                  style={styles.closeButton}
-                >
-                  <Text style={styles.closeButtonText}>Đóng</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
           </View>
-        </Modal>
-      </ScrollView>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

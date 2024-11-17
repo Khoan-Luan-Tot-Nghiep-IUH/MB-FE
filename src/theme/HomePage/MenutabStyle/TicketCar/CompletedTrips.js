@@ -4,8 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f4f4f9",
-    paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingBottom: 52
   },
   tripItem: {
     backgroundColor: "#ffffff",

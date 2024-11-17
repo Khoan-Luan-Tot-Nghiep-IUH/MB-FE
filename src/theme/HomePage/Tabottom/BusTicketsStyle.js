@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#FF9000",
-    paddingVertical: 15,
+    paddingVertical: 10,
     alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 40,
@@ -49,6 +49,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     textAlign: "center",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#999",
   },
 });
 

@@ -9,11 +9,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    flexDirection: "row", // Adjust header to row layout
-    padding: 20, // Adjust padding to give more space around content
-    backgroundColor: "#FF9000", // Orange header
-    alignItems: "center",
-    justifyContent: "space-around",
+    flexDirection: "row", // Bố cục ngang
+    alignItems: "center", // Căn giữa theo trục dọc
+    justifyContent: "space-between", // Khoảng cách giữa thông tin và icon
+    backgroundColor: "#FF9000", // Màu nền cam
+    paddingHorizontal: 16, // Padding hai bên
+    paddingVertical: 12, // Padding trên dưới
+    elevation: 4, // Hiệu ứng bóng
+    paddingLeft: 25, // Khoảng cách với biên trái
+  },
+  userInfo: {
+    flex: 1, // Chiếm toàn bộ không gian còn lại
+    marginRight: 16, // Khoảng cách với icon
   },
   loginText: {
     color: "#FFF",
@@ -27,7 +34,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   profileIconContainer: {
-    paddingTop: 13,
+    paddingTop: 10, // Padding cho icon
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)", // Nền trong suốt
+    borderRadius: 50, // Bo tròn
+    width: 50, // Kích thước cố định
+    height: 50, // Kích thước cố định
   },
   profileIcon: {
     width: 65,
@@ -36,10 +49,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 10,
   },
   userInfoContainer: {
-    padding: 20, // Add more padding for a spacious look
+    padding: 10, // Add more padding for a spacious look
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -48,25 +61,26 @@ const styles = StyleSheet.create({
     width: "90%", // Limit the width for better centering and spacing
   },
   welcomeText: {
-    fontSize: 12, // Increase the font size slightly for emphasis
+    fontSize: 16, // Kích thước chữ lớn hơn
     fontWeight: "bold",
-    color: "#fff",
+    color: "#FFF",
   },
   subTextInfo: {
-    fontSize: 12,
-    color: "#fff",
-    marginVertical: 5, // Add consistent spacing between the text
+    fontSize: 14,
+    color: "#FFF",
+    marginTop: 4, // Khoảng cách với welcomeText
   },
   logoutButton: {
-    marginTop: 15,
-    paddingVertical: 5,
-    backgroundColor: "#fff",
-    borderRadius: 5,
+    marginTop: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: "#FFF",
+    borderRadius: 8, // Bo góc
     alignItems: "center",
-    width: "60%", // Adjust button width for better proportion
+    alignSelf: "flex-start", // Căn nút về bên trái
   },
   logoutText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FF9000",
     fontWeight: "bold",
   },
@@ -132,7 +146,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     width: "100%",
   },
   updateButton: {
