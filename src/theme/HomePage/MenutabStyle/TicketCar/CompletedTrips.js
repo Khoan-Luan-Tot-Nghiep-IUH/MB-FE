@@ -40,6 +40,19 @@ const styles = StyleSheet.create({
     color: "#333",
     marginTop: 5,
   },
+  cancelButton: {
+    marginTop: 10,
+    backgroundColor: "#FF6347", // Red color for cancel button
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
 });
 
 export default styles;

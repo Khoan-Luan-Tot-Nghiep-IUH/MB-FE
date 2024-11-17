@@ -217,7 +217,7 @@ const SeatSelection = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#ff6347" />
+        <ActivityIndicator  color="#ff6347" />
         <Text>Loading seats...</Text>
       </View>
     );

@@ -1,0 +1,181 @@
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#F0F4F7", // Màu nền nhẹ nhàng hơn
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "#3B82F6",
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  backButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 10,
+  },
+  userInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
+    backgroundColor: "#1E3A8A", // Màu xanh đậm
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  userAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FBBF24", // Màu vàng
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 15,
+  },
+  userDetails: {
+    flex: 1,
+  },
+  userGreeting: {
+    fontSize: 14,
+    color: "#D1D5DB",
+    marginBottom: 5,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFF",
+    marginBottom: 5,
+  },
+  userPoints: {
+    fontSize: 14,
+    color: "#FFF",
+  },
+  pointsValue: {
+    fontWeight: "bold",
+    color: "#FBBF24",
+  },
+  redeemSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginLeft: 10,
+    color: "#1E293B", // Màu xám đậm
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    padding: 10,
+    borderRadius: 12,
+    marginBottom: 20,
+    backgroundColor: "#FFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  redeemButton: {
+    backgroundColor: "#10B981", // Màu xanh lá
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  redeemButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  voucherContainer: {
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 12,
+    backgroundColor: "#FFF",
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  voucherTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1E3A8A",
+    marginBottom: 10,
+  },
+  voucherInfo: {
+    fontSize: 14,
+    color: "#1E293B",
+    marginBottom: 5,
+  },
+  listHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  listTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 10,
+    color: "#1E3A8A",
+  },
+  voucherItem: {
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 12,
+    backgroundColor: "#FFF",
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  voucherCode: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1E293B",
+    marginBottom: 5,
+  },
+  voucherStatus: {
+    fontSize: 14,
+    color: "#10B981",
+  },
+  emptyText: {
+    textAlign: "center",
+    fontSize: 16,
+    color: "#6B7280",
+    marginTop: 20,
+  },
+});
+
+export default styles;
