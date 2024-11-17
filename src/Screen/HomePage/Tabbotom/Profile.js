@@ -38,8 +38,8 @@ const Profile = () => {
   // Hàm cập nhật thông tin
   const handleUpdate = async () => {
     try {
-      console.log("Base URL:", `${config.BASE_URL}/user/profile/${user.id}`);
-      console.log("Token:", user?.token);
+      // console.log("Base URL:", `${config.BASE_URL}/user/profile/${user.id}`);
+      // console.log("Token:", user?.token);
 
       const response = await axios.put(
         `${config.BASE_URL}/user/profile/${user.id}`,
@@ -167,7 +167,6 @@ const Profile = () => {
 const menuItems = [
   { title: "Giới thiệu nhà xe", icon: "info-circle", screen: "IntroCar" },
   { title: "Lộ trình phổ biến", icon: "line-chart", screen: "PopularCar" },
-  { title: "Quy chế hoạt động", icon: "book", screen: "SettingCar" },
   { title: "Các loại xe", icon: "bus", screen: "TypeCar" },
   { title: "Ưu đãi của tôi", icon: "gift", screen: "SettingCar" },
   { title: "Hỗ trợ", icon: "question-circle", screen: "HelpCar" },

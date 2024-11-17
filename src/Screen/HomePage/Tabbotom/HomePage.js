@@ -265,7 +265,7 @@ const HomePage = () => {
           <TouchableOpacity style={styles.button} onPress={searchTrips}>
             <Text style={styles.buttonText}>Tìm chuyến đi</Text>
           </TouchableOpacity>
-          {loading && <ActivityIndicator size="large" color="blue" />}
+          {loading && <ActivityIndicator  color="blue" />}
           <Text style={styles.title}>Tuyến đường phổ biến</Text>
           <View style={styles.routesContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>

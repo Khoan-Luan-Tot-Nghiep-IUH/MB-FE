@@ -139,7 +139,7 @@ const Booking = ({ route, navigation }) => {
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator size="small" color="#ffffff" />
+            <ActivityIndicator color="#ffffff" />
           ) : (
             <View style={styles.confirmButtonContent}>
               <Icon name="check-circle" size={18} color="#fff" />

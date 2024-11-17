@@ -188,7 +188,7 @@ const SearchResultsPage = ({ route, navigation }) => {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="small" color="blue" />
       ) : filteredTrips.length > 0 ? (
         <ScrollView>
           {filteredTrips.map((trip, index) => {

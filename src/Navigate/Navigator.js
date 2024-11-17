@@ -75,12 +75,22 @@ const StackNavigator = () => {
         <Stack.Screen
           name="TypeCar"
           component={TypeCar}
-          options={{ title: "Văn phòng nhà xe" }}
+          options={{
+            title: "Văn phòng nhà xe", // Tiêu đề hiển thị trên thanh điều hướng
+            gestureEnabled: true, // Kích hoạt lướt để quay lại
+            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
+            headerLeft: null, // Ẩn nút quay lại nếu cần
+          }}
         />
         <Stack.Screen
           name="SettingCar"
           component={SettingCar}
-          options={{ title: "Quy chế hoạt động" }}
+          options={{
+            title: "Ưu đãi của tôi",
+            gestureEnabled: true, // Kích hoạt lướt để quay lại
+            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
+            headerLeft: null,
+          }}
         />
         <Stack.Screen
           name="HelpCar"
@@ -97,11 +107,41 @@ const StackNavigator = () => {
           component={ActivityRules}
           options={{ title: "Quy chế hoạt động " }}
         />
-        <Stack.Screen name="TripListScreen" component={TripListScreen} />
-        <Stack.Screen name="SearchResultsPage" component={SearchResultScreen} />
-        <Stack.Screen name="DetailsTicket" component={DetailsTicket} />
-        <Stack.Screen name="SeatSelection" component={SeatSelection} />
-        <Stack.Screen name="Booking" component={Booking} />
+        <Stack.Screen
+          name="TripListScreen"
+          component={TripListScreen}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
+        <Stack.Screen
+          name="SearchResultsPage"
+          component={SearchResultScreen}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
+        <Stack.Screen
+          name="DetailsTicket"
+          component={DetailsTicket}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
+        <Stack.Screen
+          name="SeatSelection"
+          component={SeatSelection}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
+        <Stack.Screen
+          name="Booking"
+          component={Booking}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

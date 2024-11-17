@@ -28,53 +28,58 @@ const BusTickets = () => {
 
   // Fetch booking history from API
   const fetchBookingHistory = async () => {
-    setLoading(true);
+    setLoading(true); // Bắt đầu hiển thị loading
     try {
       const response = await axios.get(`${config.BASE_URL}/booking-history`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Đảm bảo token được truyền chính xác
         },
       });
-      const allBookings = response.data.data;
 
-      // Filter and categorize bookings by their actual statuses and presence of trip data
+      const allBookings = response.data.data || [];
+      console.log("Lịch sử đặt vé:", allBookings);
+
       const scheduledTrips = allBookings.filter(
         (booking) =>
-          (booking.status === "schedule" ||
-            booking.trip?.status === "Scheduled") &&
+          booking.trip?.status === "Scheduled" &&
+          booking.status !== "Cancelled" && // Loại bỏ các booking bị hủy
           booking.trip !== null
       );
       const completedTrips = allBookings.filter(
         (booking) =>
-          (booking.status === "completed" ||
-            booking.trip?.status === "Completed") &&
-          booking.trip !== null
+          booking.trip?.status === "Completed" && booking.trip !== null
       );
       const cancelledTrips = allBookings.filter(
-        (booking) =>
-          (booking.status === "cancelled" || booking.status === "Confirmed") &&
-          booking.trip !== null
+        (booking) => booking.status === "Cancelled" && booking.trip !== null
       );
-
-      setBookings({
+      setBookings((prev) => ({
+        ...prev,
         schedule: scheduledTrips,
         completed: completedTrips,
         cancelled: cancelledTrips,
-      });
-      setError(null); // Reset error if data is successfully fetched
+      }));
+      setError(null); // Reset lỗi nếu có dữ liệu hợp lệ
     } catch (err) {
+      console.error("Lỗi khi gọi API booking-history:", err.message);
+      setError("Không thể lấy lịch sử đặt vé. Vui lòng thử lại sau.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Dừng hiển thị loading
     }
   };
+
   useEffect(() => {
     fetchBookingHistory();
-  }, []);
+  }, [activeTab]);
 
   const renderActiveTabComponent = () => {
     switch (activeTab) {
       case "Hiện tại":
-        return <CurrentTrips trips={bookings.schedule} />;
+        return (
+          <CurrentTrips
+            trips={bookings.schedule}
+            fetchBookingHistory={fetchBookingHistory}
+          />
+        );
       case "Đã đi":
         return <CompletedTrips trips={bookings.completed} />;
       case "Đã hủy":
@@ -87,7 +92,7 @@ const BusTickets = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4A90E2" />
+        <ActivityIndicator color="#4A90E2" />
         <Text>Đang tải dữ liệu...</Text>
       </View>
     );
