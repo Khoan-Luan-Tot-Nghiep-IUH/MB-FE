@@ -28,11 +28,15 @@ const BusTickets = () => {
 
   // Fetch booking history from API
   const fetchBookingHistory = async () => {
+    if (!token) {
+      setLoading(false); // Không tải nếu chưa đăng nhập
+      return;
+    }
     setLoading(true); // Bắt đầu hiển thị loading
     try {
       const response = await axios.get(`${config.BASE_URL}/booking-history`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Đảm bảo token được truyền chính xác
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -42,7 +46,7 @@ const BusTickets = () => {
       const scheduledTrips = allBookings.filter(
         (booking) =>
           booking.trip?.status === "Scheduled" &&
-          booking.status !== "Cancelled" && // Loại bỏ các booking bị hủy
+          booking.status !== "Cancelled" &&
           booking.trip !== null
       );
       const completedTrips = allBookings.filter(
@@ -52,18 +56,18 @@ const BusTickets = () => {
       const cancelledTrips = allBookings.filter(
         (booking) => booking.status === "Cancelled" && booking.trip !== null
       );
-      setBookings((prev) => ({
-        ...prev,
+
+      setBookings({
         schedule: scheduledTrips,
         completed: completedTrips,
         cancelled: cancelledTrips,
-      }));
-      setError(null); // Reset lỗi nếu có dữ liệu hợp lệ
+      });
+      setError(null); // Xóa lỗi nếu có dữ liệu
     } catch (err) {
       console.error("Lỗi khi gọi API booking-history:", err.message);
       setError("Không thể lấy lịch sử đặt vé. Vui lòng thử lại sau.");
     } finally {
-      setLoading(false); // Dừng hiển thị loading
+      setLoading(false); // Dừng loading
     }
   };
 
@@ -127,8 +131,18 @@ const BusTickets = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <View style={{ flex: 1 }}>{renderActiveTabComponent()}</View>
-      {bookings.schedule.length === 0 && activeTab === "Hiện tại" && (
+      <View style={{ flex: 1 }}>
+        {token ? (
+          renderActiveTabComponent()
+        ) : (
+          <View style={styles.content}>
+            <Text style={styles.messageText}>
+              Vui lòng đăng nhập để xem dữ liệu chuyến đi của bạn.
+            </Text>
+          </View>
+        )}
+      </View>
+      {bookings.schedule.length === 0 && activeTab === "Hiện tại" && token && (
         <View style={styles.content}>
           <Text style={styles.messageText}>
             Bạn chưa có hành trình nào sắp tới

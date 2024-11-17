@@ -2,10 +2,11 @@ import React from "react";
 import { View, Text, FlatList } from "react-native";
 import styles from "../../../../theme/HomePage/MenutabStyle/TicketCar/CompletedTrips";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons"; // Import các icon
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CancelledTrips = ({ trips }) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={trips}
         keyExtractor={(item) => item._id}
@@ -20,7 +21,6 @@ const CancelledTrips = ({ trips }) => {
             hour: "2-digit",
             minute: "2-digit",
           });
-
           return (
             <View style={styles.tripItem}>
               {/* Header của thẻ vé */}
@@ -63,11 +63,12 @@ const CancelledTrips = ({ trips }) => {
                   Thanh toán: {item.paymentMethod}
                 </Text>
               </View>
+              {/* <View style={{ marginBottom: 12 }}></View> */}
             </View>
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

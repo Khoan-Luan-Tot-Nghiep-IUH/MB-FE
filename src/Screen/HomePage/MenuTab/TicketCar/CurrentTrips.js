@@ -5,6 +5,7 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import config from "../../../../../config";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CurrentTrips = ({ trips, fetchBookingHistory }) => {
   const token = useSelector((state) => state.user.userInfo.token);
@@ -84,7 +85,7 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={localTrips}
         keyExtractor={(item) => item._id}
@@ -159,6 +160,7 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
+              <View style={{ marginBottom: 12 }}></View>
             </View>
           );
         }}
@@ -171,7 +173,7 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
           </View>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
