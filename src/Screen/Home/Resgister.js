@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -9,41 +9,64 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 import config from "../../../config";
 
 const Register = ({ navigation }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    userName: "",
-    password: "",
-    fullName: "",
-    phoneNumber: "",
-    address: "",
-    birthDay: "",
-    verificationMethod: "email",
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Email không hợp lệ")
+      .matches(
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        "Email phải chứa ký tự @ và đúng định dạng"
+      )
+      .required("Email là bắt buộc"),
+    userName: Yup.string().required("Tên người dùng đặt tùy ý "),
+    password: Yup.string()
+      .matches(
+        /^(?=.*[@$!%*?&]).{8,}$/,
+        "Mật khẩu phải ít nhất 8 ký tự và chứa ít nhất 1 ký tự đặc biệt"
+      )
+      .required("Mật khẩu là bắt buộc"),
+    fullName: Yup.string()
+      .matches(
+        /^([A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠƯÑÁÀẢÃẠÂẦẤẬẪẨĂẰẮẴẲẶÈÉẺẼẸÊỀẾỂỄỆÌÍĨỈỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỴỶỸ][a-zàáâãèéêìíòóôõùúăđĩũơưñáàảãạâầấậẫẩăằắẵẳặèéẻẽẹêềếểễệìíĩỉịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỵỷỹ]*\s)*[A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠƯÑÁÀẢÃẠÂẦẤẬẪẨĂẰẮẴẲẶÈÉẺẼẸÊỀẾỂỄỆÌÍĨỈỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỴỶỸ][a-zàáâãèéêìíòóôõùúăđĩũơưñáàảãạâầấậẫẩăằắẵẳặèéẻẽẹêềếểễệìíĩỉịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỵỷỹ]*$/,
+        "Họ và tên phải viết hoa chữ cái đầu mỗi từ, ví dụ: 'Võ Minh Toàn'"
+      )
+      .required("Họ và tên là bắt buộc"),
+    phoneNumber: Yup.string()
+      .matches(/^0[0-9]{10,11}$/, "Số điện thoại không hợp lệ")
+      .required("Số điện thoại là bắt buộc"),
+    address: Yup.string().required("Địa chỉ là bắt buộc"),
+    birthDay: Yup.string()
+      .matches(
+        /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/,
+        "Ngày sinh phải đúng định dạng dd-mm-yyyy"
+      )
+      .required("Ngày sinh là bắt buộc ví dụ: 01-01-2002"),
+    verificationMethod: Yup.string().required(
+      "Phương thức xác nhận là bắt buộc"
+    ),
   });
 
-  const handleInputChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleRegister = async () => {
+  const handleRegister = async (values) => {
     try {
       const response = await axios.post(
         `${config.BASE_URL}/user/register`,
-        formData
+        values
       );
       const data = response.data;
 
       if (data.success) {
         Alert.alert("Thành Công", data.msg);
         navigation.navigate("VerificationScreen", {
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          verificationMethod: formData.verificationMethod,
-          userName: formData.userName,
-          password: formData.password,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          verificationMethod: values.verificationMethod,
+          userName: values.userName,
+          password: values.password,
         });
       } else {
         Alert.alert("Lỗi", data.msg);
@@ -59,75 +82,131 @@ const Register = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Tạo Tài Khoản</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#aaa"
-          value={formData.email}
-          onChangeText={(value) => handleInputChange("email", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Tên Người Dùng"
-          placeholderTextColor="#aaa"
-          value={formData.userName}
-          onChangeText={(value) => handleInputChange("userName", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Mật Khẩu"
-          placeholderTextColor="#aaa"
-          secureTextEntry
-          value={formData.password}
-          onChangeText={(value) => handleInputChange("password", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Họ và Tên"
-          placeholderTextColor="#aaa"
-          value={formData.fullName}
-          onChangeText={(value) => handleInputChange("fullName", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Số Điện Thoại"
-          placeholderTextColor="#aaa"
-          value={formData.phoneNumber}
-          onChangeText={(value) => handleInputChange("phoneNumber", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Địa Chỉ"
-          placeholderTextColor="#aaa"
-          value={formData.address}
-          onChangeText={(value) => handleInputChange("address", value)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Ngày Sinh (YYYY-MM-DD)"
-          placeholderTextColor="#aaa"
-          value={formData.birthDay}
-          onChangeText={(value) => handleInputChange("birthDay", value)}
-        />
-        <View style={styles.pickerContainer}>
-          <Text style={styles.label}>Phương Thức Xác Nhận:</Text>
-          <Picker
-            selectedValue={formData.verificationMethod}
-            style={styles.picker}
-            onValueChange={(value) =>
-              handleInputChange("verificationMethod", value)
-            }
-          >
-            <Picker.Item label="Email" value="email" />
-            <Picker.Item label="Số Điện Thoại" value="phone" />
-          </Picker>
-        </View>
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Đăng Ký</Text>
-        </TouchableOpacity>
-      </View>
+      <Formik
+        initialValues={{
+          email: "",
+          userName: "",
+          password: "",
+          fullName: "",
+          phoneNumber: "",
+          address: "",
+          birthDay: "",
+          verificationMethod: "email",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleRegister}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <View style={styles.card}>
+            <Text style={styles.title}>Tạo Tài Khoản</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+            {touched.email && errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Tên Người Dùng"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("userName")}
+              onBlur={handleBlur("userName")}
+              value={values.userName}
+            />
+            {touched.userName && errors.userName && (
+              <Text style={styles.errorText}>{errors.userName}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Mật Khẩu"
+              placeholderTextColor="#aaa"
+              secureTextEntry
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Họ và Tên"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("fullName")}
+              onBlur={handleBlur("fullName")}
+              value={values.fullName}
+            />
+            {touched.fullName && errors.fullName && (
+              <Text style={styles.errorText}>{errors.fullName}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Số Điện Thoại"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("phoneNumber")}
+              onBlur={handleBlur("phoneNumber")}
+              value={values.phoneNumber}
+            />
+            {touched.phoneNumber && errors.phoneNumber && (
+              <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Địa Chỉ"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("address")}
+              onBlur={handleBlur("address")}
+              value={values.address}
+            />
+            {touched.address && errors.address && (
+              <Text style={styles.errorText}>{errors.address}</Text>
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Ngày Sinh (YYYY-MM-DD)"
+              placeholderTextColor="#aaa"
+              onChangeText={handleChange("birthDay")}
+              onBlur={handleBlur("birthDay")}
+              value={values.birthDay}
+            />
+            {touched.birthDay && errors.birthDay && (
+              <Text style={styles.errorText}>{errors.birthDay}</Text>
+            )}
+            <View style={styles.pickerContainer}>
+              <Text style={styles.label}>Phương Thức Xác Nhận:</Text>
+              <Picker
+                selectedValue={values.verificationMethod}
+                onValueChange={(value) =>
+                  setFieldValue("verificationMethod", value)
+                }
+                style={styles.picker}
+              >
+                <Picker.Item label="Email" value="email" />
+                <Picker.Item label="Số Điện Thoại" value="phone" />
+              </Picker>
+            </View>
+            {touched.verificationMethod && errors.verificationMethod && (
+              <Text style={styles.errorText}>{errors.verificationMethod}</Text>
+            )}
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Đăng Ký</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
     </ScrollView>
   );
 };
@@ -162,7 +241,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 15,
+    marginBottom: 10,
     backgroundColor: "#f9f9f9",
     fontSize: 16,
     color: "#333",
@@ -194,6 +273,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginBottom: 10,
   },
 });
 
