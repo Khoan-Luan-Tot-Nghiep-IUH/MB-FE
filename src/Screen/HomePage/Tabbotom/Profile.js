@@ -179,7 +179,7 @@ const menuItems = [
   { title: "Các loại xe", icon: "bus", screen: "TypeCar" },
   { title: "Ưu đãi của tôi", icon: "gift", screen: "SettingCar" },
   { title: "Hỗ trợ", icon: "question-circle", screen: "HelpCar" },
-  { title: "Góp ý", icon: "envelope", screen: "Complant" },
+  // { title: "Góp ý", icon: "envelope", screen: "Complant" },
 ];
 
 export default Profile;
