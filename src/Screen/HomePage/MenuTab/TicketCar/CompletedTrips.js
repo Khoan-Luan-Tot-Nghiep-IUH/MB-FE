@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import styles from "../../../../theme/HomePage/MenutabStyle/TicketCar/CompletedTrips";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { useNavigation } from "@react-navigation/native";
 const CompletedTrips = ({ trips }) => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -32,10 +33,19 @@ const CompletedTrips = ({ trips }) => {
             hour: "2-digit",
             minute: "2-digit",
           });
-
           return (
-            <View style={styles.tripItem}>
-              {/* Ticket card header */}
+            <TouchableOpacity
+              style={styles.tripItem}
+              onPress={() => {
+                console.log("Trip Details:", item.trip);
+                console.log("Company ID:", item.trip?.companyId);
+                navigation.navigate("Complant", {
+                  tripId: item._id,
+                  trip: item.trip,
+                  companyId: item.trip?.companyId || null,
+                });
+              }}
+            >
               <View style={styles.tripHeader}>
                 <Text style={styles.location}>
                   <FontAwesome name="map-marker" size={16} color="#ff6347" />{" "}
@@ -47,8 +57,6 @@ const CompletedTrips = ({ trips }) => {
                   {item.trip.arrivalLocation.name}
                 </Text>
               </View>
-
-              {/* Detailed information */}
               <View style={styles.detailsContainer}>
                 <Text style={styles.infoText}>
                   <FontAwesome name="calendar" size={14} color="#333" /> Thời
@@ -65,7 +73,6 @@ const CompletedTrips = ({ trips }) => {
                     currency: "VND",
                   })}
                 </Text>
-
                 <Text style={styles.infoText}>
                   <MaterialIcons name="event-seat" size={14} color="#333" /> Số
                   Ghế: {item.seatNumbers.join(", ")}
@@ -75,8 +82,7 @@ const CompletedTrips = ({ trips }) => {
                   Thanh toán: {item.paymentMethod}
                 </Text>
               </View>
-              {/* <View style={{ marginBottom: 12 }}></View> */}
-            </View>
+            </TouchableOpacity>
           );
         }}
       />

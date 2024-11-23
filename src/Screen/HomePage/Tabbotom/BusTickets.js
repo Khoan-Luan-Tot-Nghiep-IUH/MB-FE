@@ -25,6 +25,7 @@ const BusTickets = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = useSelector((state) => state.user.userInfo.token);
+  
 
   // Fetch booking history from API
   const fetchBookingHistory = async () => {
@@ -42,6 +43,7 @@ const BusTickets = () => {
 
       const allBookings = response.data.data || [];
       console.log("Lịch sử đặt vé:", allBookings);
+      console.log("dữ liệu:", response.data);
 
       const scheduledTrips = allBookings.filter(
         (booking) =>
@@ -70,7 +72,6 @@ const BusTickets = () => {
       setLoading(false); // Dừng loading
     }
   };
-
   useEffect(() => {
     fetchBookingHistory();
   }, [activeTab]);
@@ -92,7 +93,6 @@ const BusTickets = () => {
         return null;
     }
   };
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
