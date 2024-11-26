@@ -131,35 +131,6 @@ const IntroCar = () => {
 
       {/* Promotions Section */}
       <View style={styles.partnerSection}>
-        <Text style={styles.sectionTitle}>
-          Vé Xe Online hi vọng sẽ được phát triển với
-        </Text>
-        <View style={styles.partnerLogosContainer}>
-          <Image
-            source={{
-              uri: "https://file1.dangcongsan.vn/DATA/0/2018/10/68___gi%E1%BA%BFng_l%C3%A0ng_qu%E1%BA%A3ng_ph%C3%BA_c%E1%BA%A7u__%E1%BB%A9ng_h%C3%B2a___%E1%BA%A3nh_vi%E1%BA%BFt_m%E1%BA%A1nh-16_51_07_908.jpg",
-            }}
-            style={styles.partnerLogo}
-          />
-          <Image
-            source={{
-              uri: "https://binhminhdigital.com/StoreData/PageData/3429/Tim-hieu-ve-ban-quyen-hinh-anh%20(3).jpg",
-            }}
-            style={styles.partnerLogo}
-          />
-          <Image
-            source={{
-              uri: "https://file1.dangcongsan.vn/DATA/0/2018/10/68___gi%E1%BA%BFng_l%C3%A0ng_qu%E1%BA%A3ng_ph%C3%BA_c%E1%BA%A7u__%E1%BB%A9ng_h%C3%B2a___%E1%BA%A3nh_vi%E1%BA%BFt_m%E1%BA%A1nh-16_51_07_908.jpg",
-            }}
-            style={styles.partnerLogo}
-          />
-          <Image
-            source={{
-              uri: "https://binhminhdigital.com/StoreData/PageData/3429/Tim-hieu-ve-ban-quyen-hinh-anh%20(3).jpg",
-            }}
-            style={styles.partnerLogo}
-          />
-        </View>
         <View style={styles.partnerDetailsContainer}>
           <Text style={styles.partnerName}>
             Công ty TNHH Vận tải Thành và Toàn

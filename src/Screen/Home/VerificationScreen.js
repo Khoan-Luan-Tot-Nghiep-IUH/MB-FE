@@ -43,16 +43,15 @@ const VerificationScreen = ({ route, navigation }) => {
           dispatch(setCredentials(userInfo));
           navigation.navigate("Main");
         } else {
-          Alert.alert("Đăng nhập thất bại", loginData.message);
+          Alert.alert("Đăng nhập thất bại");
         }
       } else {
-        Alert.alert("Thất Bại", data.msg);
+        Alert.alert("Thất Bại");
       }
     } catch (error) {
-      console.error("Xác nhận thất bại:", error);
       Alert.alert(
         "Xác nhận thất bại",
-        error.response?.data?.msg || "Có lỗi xảy ra, vui lòng thử lại."
+        "Có lỗi xảy ra, vui lòng thử lại."
       );
     }
   };
@@ -62,7 +61,7 @@ const VerificationScreen = ({ route, navigation }) => {
       <Text style={styles.title}>Xác Nhận Đăng Ký</Text>
       <Text style={styles.instruction}>
         Nhập mã xác nhận được gửi qua{" "}
-        {verificationMethod === "phone" ? "số điện thoại" : "email"}.
+        {verificationMethod === "email"}.
       </Text>
       <TextInput
         style={styles.input}

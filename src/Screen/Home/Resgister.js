@@ -75,7 +75,6 @@ const Register = ({ navigation }) => {
       console.error("Đăng ký thất bại:", error);
       Alert.alert(
         "Đăng ký thất bại",
-        error.response?.data?.msg || "Có lỗi xảy ra, vui lòng thử lại."
       );
     }
   };
@@ -195,7 +194,7 @@ const Register = ({ navigation }) => {
                 style={styles.picker}
               >
                 <Picker.Item label="Email" value="email" />
-                <Picker.Item label="Số Điện Thoại" value="phone" />
+                
               </Picker>
             </View>
             {touched.verificationMethod && errors.verificationMethod && (
