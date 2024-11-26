@@ -37,7 +37,6 @@ const Notification = () => {
       setLoading(false);
     }
   };
-
   // Mark notification as read
   const markAsRead = async (id) => {
     try {
@@ -50,7 +49,6 @@ const Notification = () => {
           },
         }
       );
-
       // Update the UI after marking as read
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
@@ -59,18 +57,15 @@ const Notification = () => {
             : notification
         )
       );
-
       // Navigate to the Home screen
       navigation.navigate("Home");
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   };
-
   useEffect(() => {
     fetchNotifications();
   }, []);
-
   // Render each notification
   const renderNotification = ({ item }) => (
     <TouchableOpacity
@@ -84,7 +79,6 @@ const Notification = () => {
       <Text style={styles.description}>{item.description}</Text>
     </TouchableOpacity>
   );
-
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -92,17 +86,16 @@ const Notification = () => {
       </SafeAreaView>
     );
   }
-
   if (notifications.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>No active notifications.</Text>
+        <Text>Không có thông báo </Text>
       </SafeAreaView>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ marginBottom: 17 }}></View>
       <FlatList
         data={notifications}
         renderItem={renderNotification}

@@ -15,8 +15,8 @@ import config from "../../../config";
 import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setCredentials } from "../../Redux/User/userSlice";
-import { jwtDecode } from "jwt-decode"; // Đảm bảo bạn đã import jwtDecode
 import { makeRedirectUri } from "expo-auth-session";
+
 WebBrowser.openAuthSessionAsync();
 
 const Login = ({ navigation }) => {
@@ -25,6 +25,7 @@ const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  // Google OAuth
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
       "12478692708-8kfnc8jelmtht963r0fukmul21tsgf6m.apps.googleusercontent.com",
@@ -40,7 +41,7 @@ const Login = ({ navigation }) => {
     }
   }, [response]);
 
-  const handleGoogleOAuthLogin = async () => {
+  const handleGoogleOAuthLogin = async (idToken) => {
     try {
       const redirectUrl = `${config.BASE_URL}/user/google`;
       const result = await WebBrowser.openAuthSessionAsync(redirectUrl);
@@ -66,6 +67,36 @@ const Login = ({ navigation }) => {
     }
   };
 
+  // Facebook OAuth
+  const handleFacebookLogin = async () => {
+    try {
+      const redirectUrl = `${config.BASE_URL}/facebook`; // Gọi API Facebook login
+      const result = await WebBrowser.openAuthSessionAsync(redirectUrl);
+
+      if (result.type === "success" && result.url) {
+        const token = new URLSearchParams(result.url.split("?")[1]).get(
+          "token"
+        );
+        if (token) {
+          const userInfo = { token };
+          await AsyncStorage.setItem("user", JSON.stringify(userInfo));
+          dispatch(setCredentials(userInfo));
+          navigation.navigate("Main");
+        } else {
+          Alert.alert(
+            "Thông báo",
+            "Không thể lấy token từ server. Vui lòng thử lại!"
+          );
+        }
+      } else {
+        Alert.alert("Thông báo", "Đăng nhập bằng Facebook đã bị hủy.");
+      }
+    } catch (error) {
+      console.error("Facebook OAuth Login Error:", error.message);
+      Alert.alert("Lỗi", "Đăng nhập Facebook thất bại. Vui lòng thử lại sau.");
+    }
+  };
+
   const handleLogin = async () => {
     if (userName === "" || password === "") {
       Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
@@ -77,10 +108,8 @@ const Login = ({ navigation }) => {
         userName,
         password,
       });
-
       if (res.data.success) {
-        const decodedUser = jwtDecode(res.data.accessToken); // Giải mã accessToken nếu có
-        const userInfo = { ...decodedUser, token: res.data.accessToken };
+        const userInfo = { token: res.data.accessToken };
         await AsyncStorage.setItem("user", JSON.stringify(userInfo));
         dispatch(setCredentials(userInfo));
         navigation.navigate("Main");
@@ -88,36 +117,11 @@ const Login = ({ navigation }) => {
         Alert.alert("Đăng nhập thất bại", res.data.message);
       }
     } catch (err) {
-      console.error("Error during login:", err.message);
-      Alert.alert("Lỗi", "Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.");
+      Alert.alert("Thông báo", "Thông tin đăng nhập không chính xác!");
     } finally {
       setLoading(false);
     }
   };
-  const handleForgotPassword = async () => {
-    if (!userName) {
-      Alert.alert("Lỗi", "Vui lòng nhập email của bạn để đặt lại mật khẩu!");
-      return;
-    }
-    try {
-      const response = await axios.post(`${config.BASE_URL}/forgot-password`, {
-        email: userName,
-      });
-
-      if (response.data.success) {
-        Alert.alert(
-          "Thành công",
-          "Một email đặt lại mật khẩu đã được gửi đến hộp thư của bạn."
-        );
-      } else {
-        Alert.alert("Lỗi", response.data.msg || "Không thể gửi email.");
-      }
-    } catch (error) {
-      console.error("Forgot Password Error:", error.message);
-      Alert.alert("Lỗi", "Có lỗi xảy ra. Vui lòng thử lại.");
-    }
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng Nhập</Text>
@@ -149,7 +153,7 @@ const Login = ({ navigation }) => {
       <View style={styles.socialContainer}>
         <TouchableOpacity
           style={styles.socialButton}
-          onPress={handleGoogleOAuthLogin}
+          onPress={() => promptAsync()}
         >
           <Image
             style={styles.socialIcon}
@@ -159,12 +163,9 @@ const Login = ({ navigation }) => {
           />
           <Text style={styles.socialButtonText}>Google</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.socialButton}
-          onPress={() =>
-            Alert.alert("Thông báo", "Tính năng đang được chúng tôi phát triển")
-          }
+          onPress={handleFacebookLogin}
         >
           <Image
             style={styles.socialIcon}
