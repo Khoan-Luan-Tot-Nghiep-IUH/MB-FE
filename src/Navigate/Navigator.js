@@ -24,6 +24,7 @@ import VerificationScreen from "../Screen/Home/VerificationScreen";
 import ForgotPassword from "../Screen/Home/ForgotPassword";
 import ResetPassword from "../Screen/Home/ResetPassword";
 import VerifyResetCodeScreen from "../Screen/Home/VerifyResetCodeScreen ";
+import OpenCty from "../Screen/HomePage/MenuTab/Info/OpenCty";
 
 const Stack = createStackNavigator();
 
@@ -95,7 +96,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="HelpCar"
           component={HelpCar}
-          options={{ title: "Hỗ trợ" }}
+          options={{ title: "Hỗ trợ " }}
         />
         <Stack.Screen
           name="Complant"
@@ -138,6 +139,13 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Booking"
           component={Booking}
+          options={{
+            gestureEnabled: true, // Kích hoạt cử chỉ quay lại
+          }}
+        />
+        <Stack.Screen
+          name="OpenCty"
+          component={OpenCty}
           options={{
             gestureEnabled: true, // Kích hoạt cử chỉ quay lại
           }}

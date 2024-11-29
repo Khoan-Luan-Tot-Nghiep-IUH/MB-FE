@@ -22,8 +22,8 @@ const Booking = ({ route, navigation }) => {
   const [paymentMethod, setPaymentMethod] = useState("OnBoard");
   const [loading, setLoading] = useState(false);
   const [qrCodeData, setQrCodeData] = useState(null);
-  const user = useSelector((state) => state.user.userInfo);
-  const token = useSelector((state) => state.user.userInfo.token);
+  const user = useSelector((state) => state.user?.userInfo);
+  const token = useSelector((state) => state.user?.userInfo?.token);
 
   const handleBooking = async () => {
     setLoading(true);

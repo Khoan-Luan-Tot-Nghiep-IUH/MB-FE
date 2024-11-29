@@ -24,7 +24,7 @@ const BusTickets = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = useSelector((state) => state.user.userInfo.token);
+  const token = useSelector((state) => state.user?.userInfo?.token);
   
 
   // Fetch booking history from API

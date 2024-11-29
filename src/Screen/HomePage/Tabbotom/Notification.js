@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = useSelector((state) => state.user.userInfo?.token);
+  const token = useSelector((state) => state.user?.userInfo?.token);
   const navigation = useNavigation();
 
   // Fetch notifications

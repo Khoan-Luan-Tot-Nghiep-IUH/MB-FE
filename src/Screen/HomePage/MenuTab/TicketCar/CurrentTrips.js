@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const CurrentTrips = ({ trips, fetchBookingHistory }) => {
-  const token = useSelector((state) => state.user.userInfo.token);
+  const token = useSelector((state) => state.user?.userInfo?.token);
   const [localTrips, setLocalTrips] = useState(trips);
 
   // Tải lại dữ liệu định kỳ mỗi 5 giây
