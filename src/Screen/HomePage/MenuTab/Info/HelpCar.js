@@ -61,10 +61,12 @@ const HelpCar = () => {
       if (response.data.success) {
         setBusTypes(response.data.data);
       } else {
+        setBusTypes([]); // Clear bus types if no data
         Alert.alert("Error", response.message);
       }
     } catch (error) {
-      Alert.alert("Error", "Không thể tải danh sách loại xe.");
+      setBusTypes([]); // Clear bus types on error
+      Alert.alert("Thông báo", "Không thể tải danh sách loại xe.");
     } finally {
       setLoading(false);
     }
@@ -106,7 +108,25 @@ const HelpCar = () => {
       setLoading(false);
     }
   };
-
+  const cancelTripRequest = async (requestId) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(
+        `${config.BASE_URL}/user/trip-requests/${requestId}`,
+        { headers: { Authorization: `bearer ${token}` } }
+      );
+      if (response.data.success) {
+        Alert.alert("Success", "Yêu cầu đã được hủy thành công.");
+        getUserTripRequests(); // Refresh the trip requests list
+      } else {
+        Alert.alert("Error", response.data.message);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Không thể hủy yêu cầu chuyến đi.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
@@ -142,7 +162,7 @@ const HelpCar = () => {
 
   return (
     <View style={styles.container}>
-    <View style={{ marginBottom:15 }}></View>
+      <View style={{ marginBottom: 15 }}></View>
       {/* Back Button at the top */}
       <View style={styles.viewcontainer}>
         <TouchableOpacity
@@ -356,7 +376,7 @@ const HelpCar = () => {
 };
 
 const styles = StyleSheet.create({
-   container: {
+  container: {
     flex: 1,
     padding: 20,
     backgroundColor: "#f9f9f9", // Soft background color
