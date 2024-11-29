@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -24,6 +24,33 @@ const Booking = ({ route, navigation }) => {
   const [qrCodeData, setQrCodeData] = useState(null);
   const user = useSelector((state) => state.user?.userInfo);
   const token = useSelector((state) => state.user?.userInfo?.token);
+
+  const [timeoutId, setTimeoutId] = useState(null); // Timeout reference
+  const [timeLeft, setTimeLeft] = useState(600); // Time left in seconds (600s = 10 minutes)
+
+  // Cập nhật thời gian còn lại mỗi giây
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          Alert.alert(
+            "Timeout",
+            "You have been idle for too long. Returning to the home page."
+          );
+          navigation.navigate("Home"); // Điều hướng về trang chủ sau khi hết 10 phút
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000); // Cập nhật mỗi giây
+
+    // Lưu timeout ID để có thể hủy sau khi booking xong
+    setTimeoutId(timer);
+
+    // Dọn dẹp timer khi component unmount hoặc booking hoàn tất
+    return () => clearInterval(timer);
+  }, [navigation]);
 
   const handleBooking = async () => {
     setLoading(true);
@@ -51,6 +78,9 @@ const Booking = ({ route, navigation }) => {
       } else {
         navigation.navigate("Main", { bookingId: data.bookingId });
       }
+
+      // Nếu booking thành công, hủy timer
+      clearInterval(timeoutId);
     } catch (error) {
       // Xử lý lỗi
       Alert.alert("Error", error.response?.data?.message || "Booking failed.");
@@ -70,9 +100,16 @@ const Booking = ({ route, navigation }) => {
       Alert.alert("QR Code Saved", "QR code has been saved to your gallery.");
     });
   };
-  const navigate = () => {
-    navigation.navigate("Main");
+
+  // Hàm định dạng thời gian (giây) thành định dạng mm:ss
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.angiang}></View>
@@ -92,7 +129,9 @@ const Booking = ({ route, navigation }) => {
         <Image source={payment} style={styles.imagePlaceholder} />
 
         <View style={styles.paymentMethodContainer}>
-          <Text style={styles.paymentMethodLabel}>Chọn Phương Thức Thanh Toán:</Text>
+          <Text style={styles.paymentMethodLabel}>
+            Chọn Phương Thức Thanh Toán:
+          </Text>
           <TouchableOpacity
             style={[
               styles.paymentOption,
@@ -133,6 +172,13 @@ const Booking = ({ route, navigation }) => {
           </View>
         )}
 
+        {/* Hiển thị đồng hồ đếm ngược */}
+        <View style={styles.countdownContainer}>
+          <Text style={styles.countdownText}>
+            Thời gian còn lại: {formatTime(timeLeft)}
+          </Text>
+        </View>
+
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={handleBooking}
@@ -143,9 +189,7 @@ const Booking = ({ route, navigation }) => {
           ) : (
             <View style={styles.confirmButtonContent}>
               <Icon name="check-circle" size={18} color="#fff" />
-              <Text style={styles.confirmButtonText} onPress={navigate}>
-                Confirm Booking
-              </Text>
+              <Text style={styles.confirmButtonText}>Confirm Booking</Text>
             </View>
           )}
         </TouchableOpacity>

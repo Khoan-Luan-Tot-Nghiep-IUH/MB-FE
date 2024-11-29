@@ -115,6 +115,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#22ba3b",
   },
+  countdownContainer: {
+    backgroundColor: "#fff", // Nền trắng để tạo sự tương phản
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    borderRadius: 12, // Bo góc mượt mà hơn
+    borderWidth: 1,
+    borderColor: "#ddd", // Để tạo đường viền nhẹ nhàng
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 3, // Tạo bóng đổ nhẹ cho cả Android và iOS
+  },
+  countdownText: {
+    fontSize: 30, // Kích thước lớn để dễ nhìn
+    fontWeight: "bold", // Chữ đậm để nổi bật
+    color: "#ff5733", // Màu đỏ cam nổi bật, dễ thấy
+    textAlign: "center", // Căn giữa để chữ đẹp hơn
+  },
 });
 
 export default styles;
