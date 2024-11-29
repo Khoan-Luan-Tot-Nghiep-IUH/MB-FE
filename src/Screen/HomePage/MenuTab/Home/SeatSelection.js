@@ -24,7 +24,7 @@ const SeatSelection = ({ route, navigation }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const socketRef = useRef(null);
   const userId = useSelector((state) => state.user.userInfo.id);
-  const yourAuthToken = useSelector((state) => state.user.userInfo.token);
+  const yourAuthToken = useSelector((state) => state.user?.userInfo?.token);
   console.log(userId);
   useEffect(() => {
     // Initialize socket connection

@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setCredentials } from "../../Redux/User/userSlice";
 import { makeRedirectUri } from "expo-auth-session";
-
+import { jwtDecode } from "jwt-decode";
 WebBrowser.openAuthSessionAsync();
 
 const Login = ({ navigation }) => {
@@ -97,31 +97,32 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const handleLogin = async () => {
-    if (userName === "" || password === "") {
-      Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
-      return;
-    }
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(`${config.BASE_URL}/user/login`, {
+      const result = await axios.post(`${config.BASE_URL}/user/login`, {
         userName,
         password,
       });
-      if (res.data.success) {
-        const userInfo = { token: res.data.accessToken };
+      const { accessToken } = result.data;
+      if (accessToken) {
+        const decodedUser = jwtDecode(accessToken);
+        const userInfo = { ...decodedUser, token: accessToken };
         await AsyncStorage.setItem("user", JSON.stringify(userInfo));
         dispatch(setCredentials(userInfo));
         navigation.navigate("Main");
       } else {
-        Alert.alert("Đăng nhập thất bại", res.data.message);
+        Alert.alert("Đăng nhập thất bại", "Không thể lấy token từ server.");
       }
-    } catch (err) {
-      Alert.alert("Thông báo", "Thông tin đăng nhập không chính xác!");
+    } catch (error) {
+      console.error("Login Error:", error.message);
+      Alert.alert("Lỗi", "Đăng nhập thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng Nhập</Text>

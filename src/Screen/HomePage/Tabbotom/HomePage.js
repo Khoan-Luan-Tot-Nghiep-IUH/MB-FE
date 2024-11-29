@@ -6,8 +6,6 @@ import {
   ImageBackground,
   SafeAreaView,
   Modal,
-  StyleSheet,
-  Dimensions,
   ScrollView,
   ActivityIndicator,
   Alert, // Import Alert for user feedback

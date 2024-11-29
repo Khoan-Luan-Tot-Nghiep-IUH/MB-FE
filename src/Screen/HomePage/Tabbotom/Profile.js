@@ -21,8 +21,10 @@ import config from "../../../../config";
 const Profile = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.userInfo);
-  const token = useSelector((state) => state.user.userInfo?.token);
+  const user = useSelector((state) => state.user?.userInfo);
+  const token = useSelector((state) => state.user?.userInfo?.token);
+  console.log(token);
+  console.log("đây là user", user);
   // console.log(token);
   const [modalVisible, setModalVisible] = useState(false); // Trạng thái hiển thị modal
   const [fullName, setFullName] = useState(user?.fullName || "");
@@ -178,8 +180,9 @@ const menuItems = [
   { title: "Lộ trình phổ biến", icon: "line-chart", screen: "PopularCar" },
   { title: "Các loại xe", icon: "bus", screen: "TypeCar" },
   { title: "Ưu đãi của tôi", icon: "gift", screen: "SettingCar" },
-  { title: "Hỗ trợ", icon: "question-circle", screen: "HelpCar" },
+  { title: "Hỗ trợ mở chuyến xe", icon: "question-circle", screen: "HelpCar" },
   // { title: "Góp ý", icon: "envelope", screen: "Complant" },
+  { title: "Hỗ trợ mở công ty", icon: "building-o", screen: "OpenCty" },
 ];
 
 export default Profile;

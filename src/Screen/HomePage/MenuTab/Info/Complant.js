@@ -20,7 +20,7 @@ const Complant = ({ route }) => {
   const [companyId, setCompanyId] = useState(passedCompanyId || "");
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const token = useSelector((state) => state.user.userInfo?.token);
+  const token = useSelector((state) => state.user?.userInfo?.token);
 
   const submitFeedback = async () => {
     if (!companyId || !rating || !comment) {
