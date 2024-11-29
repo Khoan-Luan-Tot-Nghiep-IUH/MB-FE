@@ -25,7 +25,6 @@ const BusTickets = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = useSelector((state) => state.user?.userInfo?.token);
-  
 
   // Fetch booking history from API
   const fetchBookingHistory = async () => {
@@ -49,7 +48,8 @@ const BusTickets = () => {
         (booking) =>
           booking.trip?.status === "Scheduled" &&
           booking.status !== "Cancelled" &&
-          booking.trip !== null
+          booking.trip !== null &&
+          booking.trip?.status !== "Draft"
       );
       const completedTrips = allBookings.filter(
         (booking) =>
