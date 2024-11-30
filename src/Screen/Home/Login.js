@@ -97,27 +97,32 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
+    if (userName === "" || password === "") {
+      Alert.alert("Thông báo", "Vui lòng nhập tên đăng nhập và mật khẩu!");
+      return;
+    }
     setLoading(true);
     try {
-      const result = await axios.post(`${config.BASE_URL}/user/login`, {
+      const res = await axios.post(`${config.BASE_URL}/user/login`, {
         userName,
         password,
       });
-      const { accessToken } = result.data;
-      if (accessToken) {
-        const decodedUser = jwtDecode(accessToken);
-        const userInfo = { ...decodedUser, token: accessToken };
+
+      if (res.data.success) {
+        const decodedUser = jwtDecode(res.data.accessToken); // Giải mã accessToken nếu có
+        const userInfo = { ...decodedUser, token: res.data.accessToken };
         await AsyncStorage.setItem("user", JSON.stringify(userInfo));
         dispatch(setCredentials(userInfo));
         navigation.navigate("Main");
       } else {
-        Alert.alert("Đăng nhập thất bại", "Không thể lấy token từ server.");
+        Alert.alert("Đăng nhập thất bại");
       }
-    } catch (error) {
-      console.error("Login Error:", error.message);
-      Alert.alert("Lỗi", "Đăng nhập thất bại. Vui lòng thử lại.");
+    } catch (err) {
+      Alert.alert(
+        "Thông báo",
+        "Thông tin đăng nhập không chính xác. Vui lòng thử lại!"
+      );
     } finally {
       setLoading(false);
     }
