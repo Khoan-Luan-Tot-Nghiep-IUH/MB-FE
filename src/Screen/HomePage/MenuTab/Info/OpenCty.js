@@ -48,10 +48,7 @@ const OpenCty = () => {
       }
     } catch (error) {
       setLoading(false);
-      Alert.alert(
-        "Error",
-        error.response?.data?.message || "Something went wrong!"
-      );
+      Alert.alert("Thông báo", "Bạn chưa gửi bất cứ yêu cầu nào ");
     }
   };
 
@@ -111,10 +108,7 @@ const OpenCty = () => {
       }
     } catch (error) {
       setLoading(false);
-      Alert.alert(
-        "Error",
-        error.response?.data?.message || "Something went wrong!"
-      );
+      Alert.alert("lỗi", error.response?.data?.message || "Something went wrong!");
     }
   };
 

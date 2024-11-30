@@ -23,8 +23,8 @@ const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user?.userInfo);
   const token = useSelector((state) => state.user?.userInfo?.token);
-  console.log(token);
-  console.log("đây là user", user);
+  // console.log(token);
+  // console.log("đây là user", user);
   // console.log(token);
   const [modalVisible, setModalVisible] = useState(false); // Trạng thái hiển thị modal
   const [fullName, setFullName] = useState(user?.fullName || "");
