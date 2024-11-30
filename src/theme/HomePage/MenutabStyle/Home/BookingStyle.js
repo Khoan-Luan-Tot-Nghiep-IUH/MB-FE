@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 10,
-    backgroundColor: "#22ba3b",
+    backgroundColor: "#008080",
   },
   countdownContainer: {
     backgroundColor: "#fff", // Nền trắng để tạo sự tương phản
@@ -136,6 +136,111 @@ const styles = StyleSheet.create({
     fontWeight: "bold", // Chữ đậm để nổi bật
     color: "#ff5733", // Màu đỏ cam nổi bật, dễ thấy
     textAlign: "center", // Căn giữa để chữ đẹp hơn
+  },
+  selectedVoucher: {
+    backgroundColor: "#FFEFDB", // Màu nền cho voucher đã chọn
+    borderColor: "#FF6347", // Đổi màu viền khi chọn
+  },
+  
+  
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+  },
+  modalContent: {
+    width: "90%", // Width of the modal
+    maxHeight: "80%", // Max height for responsiveness
+    backgroundColor: "#fff", // White background for the modal content
+    borderRadius: 12, // Rounded corners for the modal
+    padding: 20, // Padding inside the modal
+    shadowColor: "#000", // Shadow color
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 8, // Shadow blur radius
+    elevation: 5, // Elevation for Android
+  },
+  modalHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333", // Dark text color for the header
+    marginBottom: 15,
+    textAlign: "center", // Centered text
+  },
+  voucherItem: {
+    backgroundColor: "#f9f9f9", // Light gray background for each item
+    borderRadius: 8, // Rounded corners for each item
+    padding: 15, // Padding inside each item
+    marginVertical: 8, // Vertical margin between items
+    borderWidth: 1, // Light border around the item
+    borderColor: "#ddd", // Light gray border color
+    shadowColor: "#000", // Shadow color for each item
+    shadowOpacity: 0.1, // Shadow opacity
+    shadowRadius: 4, // Shadow blur radius
+    elevation: 3, // Elevation for Android
+  },
+  voucherCode: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#007BFF", // Blue color for voucher code
+    marginBottom: 5, // Space between code and discount
+  },
+  voucherDiscount: {
+    fontSize: 14,
+    color: "#333", // Dark text for discount info
+    marginBottom: 5, // Space between discount and next item
+  },
+  closeModalButton: {
+    backgroundColor: "#FF6347", // Tomato red color
+    paddingVertical: 12,
+    borderRadius: 8, // Rounded button
+    marginTop: 15, // Margin from the list
+    alignItems: "center", // Center the text inside the button
+  },
+  closeModalButtonText: {
+    color: "#fff", // White text color for the close button
+    fontSize: 16,
+    fontWeight: "bold", // Bold text for emphasis
+  },
+  confirmButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+
+  // Close button for modal
+  closeModalButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    backgroundColor: "#FF6347", // Tomato color for the button
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  // Close button text styling
+  closeModalText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  voucherButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: "#888", // Blue background to stand out
+    borderRadius: 25, // Rounded corners for a sleek look
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10, // Space around the button
+    elevation: 5, // Shadow for Android to give it depth
+    shadowColor: "#000", // Shadow for iOS
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  voucherButtonText: {
+    color: "#fff", // White text for contrast
+    fontSize: 16,
+    fontWeight: "bold", // Bold for emphasis
+    textTransform: "uppercase", // Uppercase for the button text to look neat
   },
 });
 
