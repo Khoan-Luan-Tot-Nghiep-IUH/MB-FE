@@ -311,5 +311,4 @@ const Booking = ({ route, navigation }) => {
     </View>
   );
 };
-
 export default Booking;

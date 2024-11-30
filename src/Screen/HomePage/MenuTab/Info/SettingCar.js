@@ -23,7 +23,6 @@ const SettingCar = () => {
   const token = useSelector((state) => state.user.userInfo?.token); // Lấy token từ Redux
   const userInfo = useSelector((state) => state.user?.userInfo); // Lấy userId từ Redux
   const dispatch = useDispatch();
-  // console.log("userInfo", userInfo);
   const navigation = useNavigation();
   // Hàm đổi điểm thành voucher
   const redeemPointsForVoucher = async () => {

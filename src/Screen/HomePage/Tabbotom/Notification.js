@@ -60,7 +60,6 @@ const Notification = () => {
       // Navigate to the Home screen
       navigation.navigate("Home");
     } catch (error) {
-      console.error("Error marking notification as read:", error);
     }
   };
   useEffect(() => {

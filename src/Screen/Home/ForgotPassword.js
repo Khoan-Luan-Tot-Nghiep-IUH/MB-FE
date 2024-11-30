@@ -33,8 +33,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
         Alert.alert("Lỗi", response.data.msg || "Không thể gửi mã.");
       }
     } catch (error) {
-      console.error("Gửi mã xác minh thất bại:", error.message);
-      Alert.alert("Lỗi", "Có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }

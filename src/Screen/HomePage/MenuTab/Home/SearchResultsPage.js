@@ -13,7 +13,6 @@ import styles from "../../../../theme/HomePage/MenutabStyle/Home/SearchResultsPa
 import { Image } from "react-native";
 
 const SearchResultsPage = ({ route, navigation }) => {
-  // Check existence of route.params and necessary values
   if (!route || !route.params || !route.params.trips) {
     console.error("Route params or trips data is missing");
     return (
@@ -22,7 +21,6 @@ const SearchResultsPage = ({ route, navigation }) => {
       </View>
     );
   }
-
   const { trips, departureLocation, arrivalLocation, departureDate } =
     route.params;
 
@@ -44,7 +42,6 @@ const SearchResultsPage = ({ route, navigation }) => {
   const [busTypeFilter, setBusTypeFilter] = useState("Tất cả");
   const [roundTripFilter, setRoundTripFilter] = useState("Tất cả"); // New filter state
   const [isLoading, setIsLoading] = useState(false);
-
   const applyFilters = () => {
     let filtered = trips.filter((trip) => {
       let isMatching = true;
@@ -65,16 +62,12 @@ const SearchResultsPage = ({ route, navigation }) => {
         isMatching =
           isMatching && trip.busType && trip.busType.name === busTypeFilter; // Check busType exists
       }
-
-      // Filter for round-trip option
       if (roundTripFilter !== "Tất cả") {
         isMatching =
           isMatching && trip.isRoundTrip === (roundTripFilter === "Có khứ hồi");
       }
-
       return isMatching;
     });
-
     setFilteredTrips(filtered);
   };
 

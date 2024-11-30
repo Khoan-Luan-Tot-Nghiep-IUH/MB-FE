@@ -32,7 +32,6 @@ const ResetPassword = ({ route, navigation }) => {
         Alert.alert("Lỗi", response.data.msg || "Không thể đặt lại mật khẩu.");
       }
     } catch (error) {
-      console.error("Reset Password Error:", error.message);
       Alert.alert("Lỗi", "Có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setLoading(false);

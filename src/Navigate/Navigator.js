@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Login from "../Screen/Home/Login";
 import TabNavigator from "./Tabbotom";
 import inrocar from "../Screen/HomePage/MenuTab/Info/IntroCar";
-import OperatingCar from "../Screen/HomePage/MenuTab/Info/OperatingCar";
 import PopularCar from "../Screen/HomePage/MenuTab/Info/PopularCar";
 import TypeCar from "../Screen/HomePage/MenuTab/Info/TypeCar";
 import SettingCar from "../Screen/HomePage/MenuTab/Info/SettingCar";
@@ -64,11 +63,6 @@ const StackNavigator = () => {
         />
         <Stack.Screen name="IntroCar" component={inrocar} />
         <Stack.Screen
-          name="OperatingCar"
-          component={OperatingCar}
-          options={{ title: "Giới thiệu nhà xe" }}
-        />
-        <Stack.Screen
           name="PopularCar"
           component={PopularCar}
           options={{ title: "Lộ trình phổ biến" }}
@@ -77,10 +71,10 @@ const StackNavigator = () => {
           name="TypeCar"
           component={TypeCar}
           options={{
-            title: "Văn phòng nhà xe", // Tiêu đề hiển thị trên thanh điều hướng
-            gestureEnabled: true, // Kích hoạt lướt để quay lại
-            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
-            headerLeft: null, // Ẩn nút quay lại nếu cần
+            title: "Văn phòng nhà xe", 
+            gestureEnabled: true,
+            headerBackTitleVisible: false, 
+            headerLeft: null, 
           }}
         />
         <Stack.Screen
@@ -88,8 +82,8 @@ const StackNavigator = () => {
           component={SettingCar}
           options={{
             title: "Ưu đãi của tôi",
-            gestureEnabled: true, // Kích hoạt lướt để quay lại
-            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
+            gestureEnabled: true, 
+            headerBackTitleVisible: false, 
             headerLeft: null,
           }}
         />
