@@ -112,6 +112,39 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "red",
   },
+  pickupPointsContainer: {
+    backgroundColor: "#fff", // Nền trắng
+    borderRadius: 8, // Bo góc nhẹ
+    marginTop: 10, // Khoảng cách giữa các phần tử
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  pickupPointsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333", // Màu chữ đậm cho tiêu đề
+    marginBottom: 10, // Khoảng cách dưới tiêu đề
+  },
+  pickupPointItem: {
+    marginBottom: 12, // Khoảng cách giữa các item
+    borderBottomWidth: 1, // Đường viền dưới
+    borderBottomColor: "#ddd", // Màu sắc của đường viền dưới
+    paddingBottom: 8,
+  },
+  pickupPointText: {
+    fontSize: 16,
+    color: "#555", // Màu chữ cho thông tin điểm đón
+    marginBottom: 4, // Khoảng cách giữa các dòng văn bản
+    lineHeight: 22, // Khoảng cách giữa các dòng văn bản
+  },
+  noPickupPoints: {
+    fontSize: 16,
+    color: "#888", // Màu chữ cho văn bản không có dữ liệu
+    textAlign: "center", // Căn giữa văn bản
+    padding: 16,
+  },
 });
 
 export default styles;

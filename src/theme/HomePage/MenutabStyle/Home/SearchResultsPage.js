@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   image: {
-    width:200,
+    width: 200,
     height: 200,
   },
   header1: {
@@ -74,6 +74,9 @@ const styles = StyleSheet.create({
   seatStatus: {
     fontSize: 14,
     color: "#666",
+  },
+  seatStatus1: {
+    color: "#333",
   },
   tripLocation: {
     flexDirection: "row",
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: "#FF6F61", // Màu nền cam
-    paddingVertical: 10, 
+    paddingVertical: 10,
     // borderRadius: 10,
   },
   backButton: {

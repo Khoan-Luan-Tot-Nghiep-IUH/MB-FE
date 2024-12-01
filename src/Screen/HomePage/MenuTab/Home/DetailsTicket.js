@@ -11,7 +11,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/DetailsTicketStyle";
 
 const DetailsTicket = ({ route, navigation }) => {
-  const { trip } = route.params;
+  const { trip, pickupPoints } = route.params;
 
   if (!trip) {
     return (
@@ -86,6 +86,29 @@ const DetailsTicket = ({ route, navigation }) => {
           <Text style={styles.availableSeats}>
             Còn {trip.availableSeats} chỗ trống
           </Text>
+          <View style={styles.pickupPointsContainer}>
+            <Text style={styles.pickupPointsTitle}>Các điểm đón:</Text>
+            <ScrollView>
+              {pickupPoints && pickupPoints.length > 0 ? (
+                pickupPoints.map((pickup, index) => (
+                  <View key={index} style={styles.pickupPointItem}>
+                    <Text style={styles.pickupPointText}>
+                      Điểm trả khách: {pickup.location}{" "}
+                    </Text>
+                    {pickup.note ? (
+                      <Text style={styles.pickupPointText}>
+                        Ghi chú: {pickup.note}{" "}
+                      </Text>
+                    ) : null}
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.noPickupPoints}>
+                  Không có điểm đón nào.
+                </Text>
+              )}
+            </ScrollView>
+          </View>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleBookTicket}>
           <Text style={styles.buttonText}>Đặt vé</Text>
