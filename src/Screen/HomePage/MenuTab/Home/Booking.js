@@ -17,7 +17,7 @@ import * as FileSystem from "expo-file-system";
 import Icon from "react-native-vector-icons/FontAwesome";
 import config from "../../../../../config";
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/BookingStyle";
-import payment from "../../../../../assets/payment.jpg";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Booking = ({ route, navigation }) => {
   const { tripId, bookingId, totalPrice } = route.params;
@@ -32,6 +32,8 @@ const Booking = ({ route, navigation }) => {
   const [selectedVoucher, setSelectedVoucher] = useState(null); // State lưu phiếu giảm giá đã chọn
   const [finalPrice, setFinalPrice] = useState(totalPrice);
   const qrCodeRef = useRef(null); // UseRef for the QR code reference
+  const [isVoucherAndTimeVisible, setIsVoucherAndTimeVisible] = useState(true); // Điều khiển việc hiển thị phiếu giảm giá và thời gian còn lại
+  const [isBookingComplete, setIsBookingComplete] = useState(false); // To track if booking is confirmed
 
   useEffect(() => {
     if (selectedVoucher) {
@@ -65,7 +67,9 @@ const Booking = ({ route, navigation }) => {
     // Dọn dẹp timer khi component unmount hoặc booking hoàn tất
     return () => clearInterval(timer);
   }, [navigation]);
-
+  const handleClearVoucher = () => {
+    setSelectedVoucher(null); // Đặt lại selectedVoucher về null
+  };
   const handleBooking = async () => {
     setLoading(true);
     try {
@@ -74,8 +78,8 @@ const Booking = ({ route, navigation }) => {
         {
           bookingId: bookingId,
           paymentMethod,
-          voucherCode: selectedVoucher ? selectedVoucher.code : "", // Nếu có voucher, truyền mã voucher vào
-          totalPrice: finalPrice, // Gửi giá đã cập nhật (sau khi áp dụng voucher)
+          voucherCode: selectedVoucher ? selectedVoucher.code : "",
+          totalPrice: finalPrice,
         },
         {
           headers: {
@@ -85,12 +89,16 @@ const Booking = ({ route, navigation }) => {
       );
       const { data } = response.data;
       Alert.alert("Success", "Booking confirmed!");
+
       if (paymentMethod === "Online") {
         setQrCodeData(data.qrCode);
+        // Ẩn phần phiếu giảm giá và thời gian còn lại khi QR code được tạo
+        setIsVoucherAndTimeVisible(false);
       } else {
         navigation.navigate("Main", { bookingId: data.bookingId });
       }
 
+      setIsBookingComplete(true); // Đánh dấu booking đã hoàn tất và hiển thị QR code
       clearInterval(timeoutId);
     } catch (error) {
       Alert.alert("Error", error.response?.data?.message || "Booking failed.");
@@ -164,8 +172,7 @@ const Booking = ({ route, navigation }) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.angiang}></View>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainerBooking}>
         <TouchableOpacity
           style={styles.backButton}
@@ -177,19 +184,20 @@ const Booking = ({ route, navigation }) => {
 
         <Text style={styles.header}>Xác Nhận Thanh Toán</Text>
       </View>
-      <TouchableOpacity
-        style={styles.voucherButton}
-        onPress={() => {
-          fetchUserVouchers();
-          setIsVoucherModalVisible(true);
-        }}
-      >
-        <Text style={styles.voucherButtonText}>Áp Phiếu giảm giá</Text>
-      </TouchableOpacity>
-      <View style={styles.header1}>
-        {/* Placeholder Image */}
-        <Image source={payment} style={styles.imagePlaceholder} />
+      {/* Chỉ hiển thị "Áp Phiếu giảm giá" khi booking chưa hoàn tất */}
+      {!isBookingComplete && (
+        <TouchableOpacity
+          style={styles.voucherButton}
+          onPress={() => {
+            fetchUserVouchers();
+            setIsVoucherModalVisible(true);
+          }}
+        >
+          <Text style={styles.voucherButtonText}>Áp Phiếu giảm giá</Text>
+        </TouchableOpacity>
+      )}
 
+      <View style={styles.header1}>
         <View style={styles.paymentMethodContainer}>
           <Text style={styles.paymentMethodLabel}>
             Chọn Phương Thức Thanh Toán:
@@ -226,7 +234,7 @@ const Booking = ({ route, navigation }) => {
             <QRCode
               value={qrCodeData}
               size={200}
-              getRef={(c) => (qrCodeRef.current = c)} // Corrected to use ref
+              getRef={(c) => (qrCodeRef.current = c)}
             />
             <TouchableOpacity
               style={styles.saveButton}
@@ -236,6 +244,7 @@ const Booking = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -255,8 +264,8 @@ const Booking = ({ route, navigation }) => {
                     <TouchableOpacity
                       style={styles.voucherItem}
                       onPress={() => {
-                        setSelectedVoucher(item); // Lưu phiếu giảm giá đã chọn
-                        setIsVoucherModalVisible(false); // Đóng modal sau khi chọn
+                        setSelectedVoucher(item);
+                        setIsVoucherModalVisible(false);
                       }}
                     >
                       <Text style={styles.voucherCode}>
@@ -281,6 +290,28 @@ const Booking = ({ route, navigation }) => {
             </View>
           </View>
         </Modal>
+
+        {/* Hiển thị phần "Bỏ chọn phiếu giảm giá" chỉ khi chưa hoàn tất booking */}
+        {!isBookingComplete && (
+          <View style={styles.voucherContainer}>
+            {selectedVoucher ? (
+              <View style={styles.voucherInfo}>
+                <Text>Voucher: {selectedVoucher.name}</Text>
+                <Text>Giảm giá: {selectedVoucher.discount}%</Text>
+                <TouchableOpacity
+                  onPress={handleClearVoucher} // Khi bấm vào "Bỏ chọn"
+                  style={styles.clearVoucherButton}
+                >
+                  <Text style={styles.clearVoucherText}>
+                    Bỏ chọn phiếu giảm giá
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <Text>Chưa chọn phiếu giảm giá</Text>
+            )}
+          </View>
+        )}
         <Text style={styles.priceText}>
           Tổng tiền:{" "}
           {new Intl.NumberFormat("vi-VN", {
@@ -288,11 +319,13 @@ const Booking = ({ route, navigation }) => {
             currency: "VND",
           }).format(finalPrice)}
         </Text>
-        <View style={styles.countdownContainer}>
-          <Text style={styles.countdownText}>
-            Thời gian còn lại: {formatTime(timeLeft)}
-          </Text>
-        </View>
+        {!isBookingComplete && (
+          <View style={styles.countdownContainer}>
+            <Text style={styles.countdownText}>
+              Thời gian còn lại: {formatTime(timeLeft)}
+            </Text>
+          </View>
+        )}
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={handleBooking}
@@ -308,7 +341,7 @@ const Booking = ({ route, navigation }) => {
           )}
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 export default Booking;

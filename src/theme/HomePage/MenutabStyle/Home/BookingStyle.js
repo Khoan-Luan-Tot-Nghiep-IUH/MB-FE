@@ -141,8 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFEFDB", // Màu nền cho voucher đã chọn
     borderColor: "#FF6347", // Đổi màu viền khi chọn
   },
-  
-  
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -241,6 +240,50 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold", // Bold for emphasis
     textTransform: "uppercase", // Uppercase for the button text to look neat
+  },
+  voucherContainer: {
+    padding: 15,
+    marginBottom: 20,
+    backgroundColor: "#f9f9f9", // Màu nền nhạt cho container
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ddd", // Viền mỏng màu xám
+  },
+  voucherInfo: {
+    flexDirection: "column", // Xếp các phần tử theo cột
+    alignItems: "flex-start", // Căn chỉnh văn bản về phía bên trái
+  },
+  clearVoucherButton: {
+    marginTop: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#FF6347", // Màu nền đỏ tươi cho nút bỏ chọn
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#FF6347", // Viền cùng màu với nền
+  },
+  clearVoucherText: {
+    color: "#fff", // Màu chữ trắng
+    fontWeight: "bold", // Chữ đậm
+    textAlign: "center", // Căn giữa chữ
+  },
+  voucherText: {
+    fontSize: 16,
+    color: "#333", // Màu chữ tối cho thông tin voucher
+    marginBottom: 5, // Khoảng cách giữa các phần tử
+  },
+  emptyVoucherText: {
+    fontSize: 16,
+    color: "#888", // Màu chữ xám khi không có voucher
+    textAlign: "center", // Căn giữa chữ
+  },
+  priceText: {
+    fontSize: 18, // Kích thước font chữ
+    fontWeight: "bold", // Đậm
+    color: "#d9534f", // Màu chữ đỏ
+    textAlign: "center", // Canh giữa
+    marginVertical: 10, // Khoảng cách trên và dưới
+    paddingHorizontal: 15, // Khoảng cách bên trái và phải
   },
 });
 

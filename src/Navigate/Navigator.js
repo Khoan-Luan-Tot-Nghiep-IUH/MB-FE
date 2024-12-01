@@ -10,7 +10,6 @@ import TypeCar from "../Screen/HomePage/MenuTab/Info/TypeCar";
 import SettingCar from "../Screen/HomePage/MenuTab/Info/SettingCar";
 import HelpCar from "../Screen/HomePage/MenuTab/Info/HelpCar";
 import Complant from "../Screen/HomePage/MenuTab/Info/Complant";
-import ActivityRules from "../Screen/HomePage/MenuTab/Lookup/ActivityRules";
 import TripListScreen from "../Screen/HomePage/MenuTab/Home/TripListScreen";
 import SearchResultScreen from "../Screen/HomePage/MenuTab/Home/SearchResultsPage";
 import DetailsTicket from "../Screen/HomePage/MenuTab/Home/DetailsTicket";
@@ -96,11 +95,6 @@ const StackNavigator = () => {
           name="Complant"
           component={Complant}
           options={{ title: "Góp ý" }}
-        />
-        <Stack.Screen
-          name="ActivityRules"
-          component={ActivityRules}
-          options={{ title: "Quy chế hoạt động " }}
         />
         <Stack.Screen
           name="TripListScreen"

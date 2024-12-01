@@ -46,7 +46,15 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
     setLocalTrips(trips);
   }, [trips]);
 
-  const handleCancelTrip = async (bookingId) => {
+  const handleCancelTrip = async (bookingId, paymentMethod) => {
+    if (paymentMethod === "Online") {
+      Alert.alert(
+        "Không thể hủy vé",
+        "Vé đã được thanh toán qua hình thức online và không thể hủy.",
+        [{ text: "OK" }]
+      );
+      return; // Dừng lại nếu thanh toán online
+    }
     Alert.alert(
       "Xác nhận hủy vé",
       "Bạn có chắc chắn muốn hủy vé chuyến đi này không?",
@@ -152,7 +160,10 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.cancelButton}
-                  onPress={() => handleCancelTrip(item._id)}
+                  onPress={
+                    () => handleCancelTrip(item._id, item.paymentMethod) // Thêm paymentMethod vào
+                  }
+                  disabled={item.paymentMethod === "online"} // Disable nút nếu thanh toán online
                 >
                   <Text style={styles.cancelButtonText}>
                     <MaterialIcons name="cancel" size={16} color="#fff" /> Hủy
