@@ -5,13 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import Login from "../Screen/Home/Login";
 import TabNavigator from "./Tabbotom";
 import inrocar from "../Screen/HomePage/MenuTab/Info/IntroCar";
-import OperatingCar from "../Screen/HomePage/MenuTab/Info/OperatingCar";
 import PopularCar from "../Screen/HomePage/MenuTab/Info/PopularCar";
 import TypeCar from "../Screen/HomePage/MenuTab/Info/TypeCar";
 import SettingCar from "../Screen/HomePage/MenuTab/Info/SettingCar";
 import HelpCar from "../Screen/HomePage/MenuTab/Info/HelpCar";
 import Complant from "../Screen/HomePage/MenuTab/Info/Complant";
-import ActivityRules from "../Screen/HomePage/MenuTab/Lookup/ActivityRules";
 import TripListScreen from "../Screen/HomePage/MenuTab/Home/TripListScreen";
 import SearchResultScreen from "../Screen/HomePage/MenuTab/Home/SearchResultsPage";
 import DetailsTicket from "../Screen/HomePage/MenuTab/Home/DetailsTicket";
@@ -64,11 +62,6 @@ const StackNavigator = () => {
         />
         <Stack.Screen name="IntroCar" component={inrocar} />
         <Stack.Screen
-          name="OperatingCar"
-          component={OperatingCar}
-          options={{ title: "Giới thiệu nhà xe" }}
-        />
-        <Stack.Screen
           name="PopularCar"
           component={PopularCar}
           options={{ title: "Lộ trình phổ biến" }}
@@ -77,10 +70,10 @@ const StackNavigator = () => {
           name="TypeCar"
           component={TypeCar}
           options={{
-            title: "Văn phòng nhà xe", // Tiêu đề hiển thị trên thanh điều hướng
-            gestureEnabled: true, // Kích hoạt lướt để quay lại
-            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
-            headerLeft: null, // Ẩn nút quay lại nếu cần
+            title: "Văn phòng nhà xe", 
+            gestureEnabled: true,
+            headerBackTitleVisible: false, 
+            headerLeft: null, 
           }}
         />
         <Stack.Screen
@@ -88,8 +81,8 @@ const StackNavigator = () => {
           component={SettingCar}
           options={{
             title: "Ưu đãi của tôi",
-            gestureEnabled: true, // Kích hoạt lướt để quay lại
-            headerBackTitleVisible: false, // Ẩn chữ "Back" ở iOS
+            gestureEnabled: true, 
+            headerBackTitleVisible: false, 
             headerLeft: null,
           }}
         />
@@ -102,11 +95,6 @@ const StackNavigator = () => {
           name="Complant"
           component={Complant}
           options={{ title: "Góp ý" }}
-        />
-        <Stack.Screen
-          name="ActivityRules"
-          component={ActivityRules}
-          options={{ title: "Quy chế hoạt động " }}
         />
         <Stack.Screen
           name="TripListScreen"

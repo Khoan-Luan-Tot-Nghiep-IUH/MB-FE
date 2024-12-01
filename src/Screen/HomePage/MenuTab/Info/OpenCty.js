@@ -19,7 +19,8 @@ import { Formik } from "formik";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import config from "../../../../../config";
-
+import { MaterialCommunityIcons } from "react-native-vector-icons";
+import { useNavigation } from "@react-navigation/native";
 const OpenCty = () => {
   const [loading, setLoading] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -27,7 +28,7 @@ const OpenCty = () => {
   const [userRequests, setUserRequests] = useState([]);
   const token = useSelector((state) => state.user.userInfo.token);
   const [tripRequests, setTripRequests] = useState([]);
-
+  const navigation = useNavigation();
   // Fetch user requests
   const fetchUserRequests = async () => {
     setLoading(true);
@@ -108,13 +109,22 @@ const OpenCty = () => {
       }
     } catch (error) {
       setLoading(false);
-      Alert.alert("lỗi", error.response?.data?.message || "Something went wrong!");
+      Alert.alert(
+        "lỗi",
+        error.response?.data?.message || "Something went wrong!"
+      );
     }
   };
-
   return (
     <View style={styles.container}>
-      {/* Button to open the modal */}
+      <View style={{ height: 20 }}></View>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()} // navigation.goBack() để quay về màn trước
+      >
+        <MaterialCommunityIcons name="arrow-left" size={24} color="#007bff" />
+        <Text style={styles.backText}>Quay về</Text>
+      </TouchableOpacity>
       <Button
         mode="contained"
         onPress={() => setModalVisible(true)}
@@ -122,7 +132,6 @@ const OpenCty = () => {
       >
         Open Create Company Form
       </Button>
-
       {/* Modal */}
       <Modal
         visible={modalVisible}
@@ -227,7 +236,51 @@ const OpenCty = () => {
         data={userRequests}
         renderItem={({ item }) => (
           <View style={styles.companyItem}>
-            <Text style={styles.companyTitle}>{item.name}</Text>
+            <Text style={styles.companyTitle}>Tên Công Ty: {item.name}</Text>
+
+            {/* Address with icon */}
+            <View style={styles.textRow}>
+              <MaterialCommunityIcons
+                name="home-city"
+                size={20}
+                color="#007bff"
+                style={styles.icon}
+              />
+              <Text>Địa chỉ: {item.address}</Text>
+            </View>
+            {/* Phone number with icon */}
+            <View style={styles.textRow}>
+              <MaterialCommunityIcons
+                name="phone"
+                size={20}
+                color="#007bff"
+                style={styles.icon}
+              />
+              <Text>Số điện thoại: {item.phoneNumber}</Text>
+            </View>
+
+            {/* Email with icon */}
+            <View style={styles.textRow}>
+              <MaterialCommunityIcons
+                name="email"
+                size={20}
+                color="#007bff"
+                style={styles.icon}
+              />
+              <Text>Email: {item.email}</Text>
+            </View>
+
+            {/* Website with icon */}
+            <View style={styles.textRow}>
+              <MaterialCommunityIcons
+                name="web"
+                size={20}
+                color="#007bff"
+                style={styles.icon}
+              />
+              <Text>Website: {item.website}</Text>
+            </View>
+
             <Button
               mode="contained"
               onPress={() => handleCancelRequest(item._id)}
@@ -258,68 +311,101 @@ const OpenCty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f9f9f9",
-    padding: 20,
+    backgroundColor: "#f5f5f5", // Background color
+    padding: 16,
   },
   openButton: {
+    backgroundColor: "#4CAF50",
     marginBottom: 20,
-    backgroundColor: "#007BFF",
-    width: "100%",
+    paddingVertical: 10,
+    borderRadius: 8,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
+    backgroundColor: "white",
+    borderRadius: 10,
     width: "90%",
-    backgroundColor: "#fff",
-    borderRadius: 15,
     padding: 20,
-    elevation: 10,
-  },
-  formContainer: {
-    padding: 20,
+    elevation: 5,
   },
   header: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
     color: "#333",
   },
   input: {
-    marginBottom: 15,
-    backgroundColor: "#f5f5f5",
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: "#28a745",
-  },
-  closeButton: {
-    marginTop: 10,
-    color: "#007bff",
+    marginBottom: 12,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
   companyItem: {
     backgroundColor: "#fff",
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-    elevation: 5,
-    width: "100%",
-    marginHorizontal: 20,
+    padding: 20,
+    marginBottom: 12,
+    borderRadius: 8,
+    elevation: 3,
+    flexDirection: "column", // Vertical layout for items
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
   companyTitle: {
+    fontSize: 18,
     fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 10,
     color: "#333",
+    marginBottom: 8,
+  },
+  textRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  textLabel: {
+    fontWeight: "bold",
+    marginRight: 6,
   },
   cancelButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#E57373",
+    marginTop: 10,
+    borderRadius: 8,
+  },
+  cancelButtonText: {
+    color: "white",
+    textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#007bff",
+    marginTop: 20,
+    borderRadius: 8,
+    paddingVertical: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  icon: {
+    marginRight: 8,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#f1f1f1",
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  backText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#007bff",
   },
 });
 

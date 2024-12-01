@@ -41,9 +41,6 @@ const BusTickets = () => {
       });
 
       const allBookings = response.data.data || [];
-      console.log("Lịch sử đặt vé:", allBookings);
-      console.log("dữ liệu:", response.data);
-
       const scheduledTrips = allBookings.filter(
         (booking) =>
           booking.trip?.status === "Scheduled" &&
@@ -66,7 +63,6 @@ const BusTickets = () => {
       });
       setError(null); // Xóa lỗi nếu có dữ liệu
     } catch (err) {
-      console.error("Lỗi khi gọi API booking-history:", err.message);
       setError("Không thể lấy lịch sử đặt vé. Vui lòng thử lại sau.");
     } finally {
       setLoading(false); // Dừng loading

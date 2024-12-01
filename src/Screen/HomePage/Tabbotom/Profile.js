@@ -22,10 +22,6 @@ const Profile = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user?.userInfo);
-  const token = useSelector((state) => state.user?.userInfo?.token);
-  // console.log(token);
-  // console.log("đây là user", user);
-  // console.log(token);
   const [modalVisible, setModalVisible] = useState(false); // Trạng thái hiển thị modal
   const [fullName, setFullName] = useState(user?.fullName || "");
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
@@ -39,9 +35,6 @@ const Profile = () => {
   // Hàm cập nhật thông tin
   const handleUpdate = async () => {
     try {
-      // console.log("Base URL:", `${config.BASE_URL}/user/profile/${user.id}`);
-      // console.log("Token:", user?.token);
-
       const response = await axios.put(
         `${config.BASE_URL}/user/profile/${user.id}`,
         { fullName, phoneNumber },
@@ -51,7 +44,6 @@ const Profile = () => {
           },
         }
       );
-      // console.log("Response from API:", response.data);
       Alert.alert("Thành công", "Cập nhật thông tin thành công");
 
       // Cập nhật Redux với dữ liệu mới từ API
@@ -98,7 +90,6 @@ const Profile = () => {
             </>
           )}
         </View>
-        {/* Icon Profile */}
         <TouchableOpacity
           style={styles.profileIconContainer}
           onPress={() => setModalVisible(true)}
@@ -108,7 +99,6 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
       </View>
-
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
@@ -130,7 +120,6 @@ const Profile = () => {
       <Text style={styles.footerText}>
         Công ty TNHH Du Lịch Vận Tải Thành và Toàn
       </Text>
-
       {/* Modal hiển thị và cập nhật thông tin người dùng */}
       <Modal
         animationType="slide"
@@ -181,7 +170,6 @@ const menuItems = [
   { title: "Các loại xe", icon: "bus", screen: "TypeCar" },
   { title: "Ưu đãi của tôi", icon: "gift", screen: "SettingCar" },
   { title: "Hỗ trợ mở chuyến xe", icon: "question-circle", screen: "HelpCar" },
-  // { title: "Góp ý", icon: "envelope", screen: "Complant" },
   { title: "Hỗ trợ mở công ty", icon: "building-o", screen: "OpenCty" },
 ];
 

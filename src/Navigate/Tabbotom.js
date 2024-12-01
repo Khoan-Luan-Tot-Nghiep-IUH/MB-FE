@@ -7,7 +7,6 @@ import { StyleSheet } from "react-native";
 import Home from "../Screen/HomePage/Tabbotom/HomePage";
 import BusTickets from "../Screen/HomePage/Tabbotom/BusTickets";
 import Notification from "../Screen/HomePage/Tabbotom/Notification";
-import Lookup from "../Screen/HomePage/Tabbotom/Lookup";
 import Profile from "../Screen/HomePage/Tabbotom/Profile";
 
 const Tab = createBottomTabNavigator();
@@ -20,8 +19,6 @@ const TabNavigator = () => {
           // Cấu hình tên icon dựa trên route
           if (route.name === "Trang chủ") iconName = "home";
           else if (route.name === "Vé xe") iconName = "bus";
-          else if (route.name === "Tra cứu")
-            iconName = "search";
           else if (route.name === "Thông báo") iconName = "notifications";
           else if (route.name === "Thông tin") iconName = "person";
 
@@ -60,7 +57,6 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Trang chủ" component={Home} />
       <Tab.Screen name="Vé xe" component={BusTickets} />
-      <Tab.Screen name="Tra cứu" component={Lookup} />
       <Tab.Screen name="Thông báo" component={Notification} />
       <Tab.Screen name="Thông tin" component={Profile} />
     </Tab.Navigator>
@@ -83,4 +79,3 @@ const styles = StyleSheet.create({
 });
 
 export default TabNavigator;
-

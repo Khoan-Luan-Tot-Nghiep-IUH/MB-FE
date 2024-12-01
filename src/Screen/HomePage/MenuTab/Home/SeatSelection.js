@@ -27,14 +27,12 @@ const SeatSelection = ({ route, navigation }) => {
   const yourAuthToken = useSelector((state) => state.user?.userInfo?.token);
   console.log(userId);
   useEffect(() => {
-    // Initialize socket connection
     socketRef.current = io(config.SOCKET_URL, {
       transports: ["websocket"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
-
     socketRef.current.emit("joinTrip", tripId, (ack) => {
       if (ack.success) {
         console.log("Successfully joined trip room:", tripId);
@@ -47,8 +45,6 @@ const SeatSelection = ({ route, navigation }) => {
       console.error("Socket connection error:", err);
       setError("Unable to connect to booking service. Please try again later.");
     });
-
-    // Lắng nghe sự kiện ghế bị khóa (chọn bởi tài khoản khác)
     socketRef.current.on("seatLocked", ({ tripId, seatNumber, lockedBy }) => {
       setSeats((prevSeats) => ({
         lower: prevSeats.lower.map((seat) =>
@@ -71,8 +67,6 @@ const SeatSelection = ({ route, navigation }) => {
         ),
       }));
     });
-
-    // Lắng nghe sự kiện ghế được mở khóa (bỏ chọn bởi tài khoản khác)
     socketRef.current.on("seatReleased", ({ tripId, seatNumber }) => {
       setSeats((prevSeats) => ({
         lower: prevSeats.lower.map((seat) =>
@@ -118,14 +112,12 @@ const SeatSelection = ({ route, navigation }) => {
 
     fetchSeats();
   }, [tripId]);
-
   const handleSeatSelect = (seat) => {
     // Nếu ghế bị khóa bởi người khác, không cho phép chọn hoặc bỏ chọn
     if (!seat.isAvailable && seat.lockedBy !== userId) {
       Alert.alert("Ghế không khả dụng", "Ghế này đã được chọn bởi người khác.");
       return;
     }
-
     if (selectedSeats.includes(seat._id)) {
       // Bỏ chọn ghế
       socketRef.current.emit("releaseSeat", {
@@ -143,7 +135,6 @@ const SeatSelection = ({ route, navigation }) => {
         seatNumber: seat.seatNumber,
         userId,
       });
-
       setSelectedSeats((prev) => [...prev, seat._id]);
       setTotalPrice((prevPrice) => prevPrice + seat.price);
     }
@@ -166,8 +157,6 @@ const SeatSelection = ({ route, navigation }) => {
           return seat ? seat.seatNumber : null;
         })
         .filter((seatNumber) => seatNumber !== null);
-
-      // Gọi API để tạo booking draft
       const response = await axios.post(
         `${config.BASE_URL}/bookings-confirm`,
         {
@@ -176,7 +165,7 @@ const SeatSelection = ({ route, navigation }) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${yourAuthToken}`, // Thay bằng token của bạn
+            Authorization: `Bearer ${yourAuthToken}`, 
           },
         }
       );

@@ -8,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Dùng icon quay về (yêu cầu expo install @expo/vector-icons)
+import { Ionicons } from "@expo/vector-icons"; 
 import RouteCard from "../../Tabbotom/RouteCard";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";

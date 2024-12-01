@@ -26,7 +26,7 @@ const Login = ({ navigation }) => {
   const dispatch = useDispatch();
 
   // Google OAuth
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  const [response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
       "12478692708-8kfnc8jelmtht963r0fukmul21tsgf6m.apps.googleusercontent.com",
     redirectUri: makeRedirectUri({
@@ -62,7 +62,6 @@ const Login = ({ navigation }) => {
         Alert.alert("Lỗi", "Quá trình đăng nhập bị hủy.");
       }
     } catch (error) {
-      console.error("Google OAuth Login Error:", error.message);
       Alert.alert("Lỗi", "Đăng nhập Google thất bại. Vui lòng thử lại.");
     }
   };
@@ -92,11 +91,9 @@ const Login = ({ navigation }) => {
         Alert.alert("Thông báo", "Đăng nhập bằng Facebook đã bị hủy.");
       }
     } catch (error) {
-      console.error("Facebook OAuth Login Error:", error.message);
       Alert.alert("Lỗi", "Đăng nhập Facebook thất bại. Vui lòng thử lại sau.");
     }
   };
-
   const handleLogin = async () => {
     if (userName === "" || password === "") {
       Alert.alert("Thông báo", "Vui lòng nhập tên đăng nhập và mật khẩu!");
@@ -108,7 +105,6 @@ const Login = ({ navigation }) => {
         userName,
         password,
       });
-
       if (res.data.success) {
         const decodedUser = jwtDecode(res.data.accessToken); // Giải mã accessToken nếu có
         const userInfo = { ...decodedUser, token: res.data.accessToken };
