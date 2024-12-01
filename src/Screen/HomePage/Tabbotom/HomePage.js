@@ -134,6 +134,7 @@ const HomePage = () => {
           trips: response.data.data.departureTrips,
           departureLocation: departure,
           arrivalLocation: destination,
+          pickupPoints: response.data.data.departureTrips[0].pickupPoints,
           departureDate: date.toISOString().split("T")[0],
         });
       } else {
@@ -157,6 +158,7 @@ const HomePage = () => {
         params: {
           departureLocation: from,
           arrivalLocation: to,
+
           departureDate: date.toISOString().split("T")[0],
         },
       });
@@ -168,6 +170,7 @@ const HomePage = () => {
           trips: response.data.data.departureTrips,
           departureLocation: from,
           arrivalLocation: to,
+          pickupPoints: response.data.data.departureTrips[0].pickupPoints,
           departureDate: date.toISOString().split("T")[0],
         });
       } else {
@@ -263,7 +266,7 @@ const HomePage = () => {
           <TouchableOpacity style={styles.button} onPress={searchTrips}>
             <Text style={styles.buttonText}>Tìm chuyến đi</Text>
           </TouchableOpacity>
-          {loading && <ActivityIndicator  color="blue" />}
+          {loading && <ActivityIndicator color="blue" />}
           <Text style={styles.title}>Tuyến đường phổ biến</Text>
           <View style={styles.routesContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>

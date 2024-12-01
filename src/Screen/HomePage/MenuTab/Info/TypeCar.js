@@ -83,7 +83,7 @@ const TypeCar = ({ navigation }) => {
                 🛗 Số tầng: {item.floorCount || "1"}
               </Text>
               <Text style={styles.company}>
-                🏢 Công ty: {item.companies?.name || "Chưa rõ"}
+                🏢 Công ty: {item.companyName || "Chưa rõ"}
               </Text>
             </View>
           </View>

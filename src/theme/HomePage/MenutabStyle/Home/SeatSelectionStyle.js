@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 16,
     color: "#ffffff",
-    marginTop: 4, //
+    marginTop: 4,
   },
   row: {
     padding: 15,
@@ -48,16 +48,22 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   sold: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#dc3545", // Red color for sold seats
   },
   available: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#28a745", // Green color for available seats
   },
   selected: {
-    backgroundColor: "#ffa500",
+    backgroundColor: "#ffa500", // Orange color for selected seats
   },
   tempSelected: {
     backgroundColor: "#ffcc00", // Temporary selected seat color
+  },
+  seatVip: {
+    backgroundColor: "#C0C0C0", // VIP seats color (Pink)
+  },
+  seatNotForSale: {
+    backgroundColor: "#333333", // Non-sale seats color (Gray)
   },
   seatText: {
     color: "#ffffff",
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
-    elevation: 2, // Hiệu ứng bóng trên Android
+    elevation: 2,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -193,6 +199,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
+  
 });
 
 export default styles;

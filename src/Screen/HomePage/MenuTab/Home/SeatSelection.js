@@ -165,7 +165,7 @@ const SeatSelection = ({ route, navigation }) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${yourAuthToken}`, 
+            Authorization: `Bearer ${yourAuthToken}`,
           },
         }
       );
@@ -206,7 +206,7 @@ const SeatSelection = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator  color="#ff6347" />
+        <ActivityIndicator color="#ff6347" />
         <Text>Loading seats...</Text>
       </View>
     );
@@ -247,28 +247,41 @@ const SeatSelection = ({ route, navigation }) => {
           <Text style={styles.tierHeader}>Tầng dưới</Text>
         </View>
         <View style={styles.row}>
-          {seats.lower.map((seat) => (
-            <TouchableOpacity
-              key={seat._id}
-              style={[
-                styles.seat,
-                !seat.isAvailable && seat.lockedBy !== userId // Ghế bị khóa bởi người khác
-                  ? styles.sold
-                  : selectedSeats.includes(seat._id) // Ghế được bạn chọn
-                  ? styles.selected
-                  : styles.available, // Ghế trống
-              ]}
-              onPress={() => handleSeatSelect(seat)}
-              disabled={!seat.isAvailable && seat.lockedBy !== userId} // Không cho chọn nếu bị khóa bởi người khác
-            >
-              <MaterialCommunityIcons
-                name="seat-recline-extra"
-                size={24}
-                color="#ffffff"
-              />
-              <Text style={styles.seatText}>{seat.seatNumber}</Text>
-            </TouchableOpacity>
-          ))}
+          {seats.lower.map((seat) => {
+            // Điều kiện: Ghế VIP từ 2 đến 6
+            const isVipSeat = seat.seatNumber >= 2 && seat.seatNumber <= 6;
+            // Điều kiện: Ghế không bán (Ghế 1)
+            const isNotForSale = seat.seatNumber === 1;
+            return (
+              <TouchableOpacity
+                key={seat._id}
+                style={[
+                  styles.seat,
+                  isNotForSale
+                    ? styles.seatNotForSale // Ghế 1, không thể chọn
+                    : isVipSeat
+                    ? styles.seatVip // Ghế VIP
+                    : !seat.isAvailable && seat.lockedBy !== userId
+                    ? styles.sold // Ghế bị khóa
+                    : selectedSeats.includes(seat._id)
+                    ? styles.selected // Ghế đã chọn
+                    : styles.available, // Ghế trống
+                ]}
+                onPress={() => handleSeatSelect(seat)}
+                disabled={
+                  isNotForSale ||
+                  (!seat.isAvailable && seat.lockedBy !== userId)
+                } // Ghế 1 và ghế bị khóa không thể chọn
+              >
+                <MaterialCommunityIcons
+                  name="seat-recline-extra"
+                  size={24}
+                  color="#ffffff"
+                />
+                <Text style={styles.seatText}>{seat.seatNumber}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
         <View style={styles.sectionHeader}>
           <FontAwesome5
@@ -305,10 +318,52 @@ const SeatSelection = ({ route, navigation }) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Text style={styles.statusSold}>Đã bán</Text>
-        <Text style={styles.statusAvailable}>Trống</Text>
-        <Text style={styles.statustempSelected}>Đang chọn</Text>
+        <View style={styles.statusContainer}>
+          <MaterialCommunityIcons
+            name="seat-recline-extra"
+            size={24}
+            color="#dc3545"
+          />
+          <Text style={styles.statusText}>Đã bán</Text>
+        </View>
+
+        <View style={styles.statusContainer}>
+          <MaterialCommunityIcons
+            name="seat-recline-extra"
+            size={24}
+            color="#28a745"
+          />
+          <Text style={styles.statusText}>Trống</Text>
+        </View>
+
+        <View style={styles.statusContainer}>
+          <MaterialCommunityIcons
+            name="seat-recline-extra"
+            size={24}
+            color="#C0C0C0"
+          />
+          <Text style={styles.statusText}>Đang chọn</Text>
+        </View>
+
+        <View style={styles.statusContainer}>
+          <MaterialCommunityIcons
+            name="seat-recline-extra"
+            size={24}
+            color="#FFD700"
+          />
+          <Text style={styles.statusText}>VIP</Text>
+        </View>
+
+        <View style={styles.statusContainer}>
+          <MaterialCommunityIcons
+            name="seat-recline-extra"
+            size={24}
+            color="#333333 "
+          />
+          <Text style={styles.statusText}>Không bán</Text>
+        </View>
       </View>
+
       <Text style={styles.selectedSeatsContainer}>Ghế đã chọn:</Text>
       <ScrollView>
         <View style={styles.selectedSeatsContainer}>

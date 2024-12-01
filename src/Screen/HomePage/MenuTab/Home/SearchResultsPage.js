@@ -21,9 +21,14 @@ const SearchResultsPage = ({ route, navigation }) => {
       </View>
     );
   }
-  const { trips, departureLocation, arrivalLocation, departureDate } =
-    route.params;
-
+  const {
+    trips,
+    departureLocation,
+    arrivalLocation,
+    departureDate,
+    pickupPoints,
+  } = route.params;
+  console.log("Pickup Points:", pickupPoints);
   if (!Array.isArray(trips)) {
     console.error("Trips is undefined or not an array");
     return (
@@ -89,7 +94,6 @@ const SearchResultsPage = ({ route, navigation }) => {
       }),
     };
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}></View>
@@ -195,7 +199,9 @@ const SearchResultsPage = ({ route, navigation }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.tripCard}
-                onPress={() => navigation.navigate("DetailsTicket", { trip })}
+                onPress={() =>
+                  navigation.navigate("DetailsTicket", { trip, pickupPoints })
+                }
               >
                 <View style={styles.tripInfo}>
                   <Text style={styles.tripTime}>
@@ -227,9 +233,8 @@ const SearchResultsPage = ({ route, navigation }) => {
                   <FontAwesome5 name="chair" size={16} color="brown" /> Còn{" "}
                   {trip.availableSeats} chỗ
                 </Text>
-                {console.log(trip.companyId?.name)}
-                <Text style={styles.seatStatus}>
-                  <FontAwesome5 name="chair" size={16} color="brown" />
+                <Text style={styles.seatStatus1}>
+                  <FontAwesome5 name="building" size={16} color="#333" />
                   {trip.companyId?.name}
                 </Text>
                 <View style={styles.tripLocation}>
