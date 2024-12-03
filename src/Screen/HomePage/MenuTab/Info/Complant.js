@@ -14,50 +14,46 @@ import config from "../../../../../config";
 
 const Complant = ({ route }) => {
   // Nhận tham số từ route.params
-  const { tripId, trip, companyId: passedCompanyId } = route.params;
-  console.log("Received companyId:", passedCompanyId);
-
-  const [companyId, setCompanyId] = useState(passedCompanyId || "");
+  const { tripId, trip, companyId, companyId: passedCompanyId } = route.params;
+  // console.log("Received companyId 1:", trip?.companyId._id);
+  // console.log("Received companyId 2:", passedCompanyId._id);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const token = useSelector((state) => state.user?.userInfo?.token);
-
   const submitFeedback = async () => {
     if (!companyId || !rating || !comment) {
       Alert.alert("Lỗi", "Vui lòng nhập đủ thông tin trước khi gửi!");
       return;
     }
-    const feedbackData = {
-      companyId,
-      rating,
-      comment,
-    };
-    console.log("dữ liệu gửi đi :", feedbackData);
+    // Tạo FormData để gửi dữ liệu dưới dạng form-data
+    const formData = new FormData();
+    // formData.append("companyId", trip?.companyId?._id);
+    formData.append("companyId", passedCompanyId._id);
+    formData.append("rating", rating);
+    formData.append("comment", comment);
+
+    console.log("Dữ liệu gửi đi:", formData);
+
     try {
       const response = await axios.post(
         `${config.BASE_URL}/feedbacks`,
-        feedbackData,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data", // Đảm bảo Content-Type là multipart/form-data
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       if (response.status === 201) {
         Alert.alert("Thành công", "Đánh giá của bạn đã được gửi!");
       } else {
         Alert.alert("Lỗi", response.data.error || "Gửi đánh giá thất bại!");
       }
-    } catch (error) {
-      console.error("Error submitting feedback:", error.response || error);
-      Alert.alert(
-        "Lỗi",
-        error.response?.data?.error ||
-          "Không thể gửi đánh giá. Vui lòng thử lại."
-      );
-    }
+    } catch (error) {}
   };
+
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
       <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>

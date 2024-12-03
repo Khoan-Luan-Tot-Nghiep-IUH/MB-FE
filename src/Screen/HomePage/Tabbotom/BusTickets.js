@@ -55,15 +55,13 @@ const BusTickets = () => {
       const cancelledTrips = allBookings.filter(
         (booking) => booking.status === "Cancelled" && booking.trip !== null
       );
-
       setBookings({
         schedule: scheduledTrips,
         completed: completedTrips,
         cancelled: cancelledTrips,
       });
-      setError(null); // Xóa lỗi nếu có dữ liệu
+      setError(null);
     } catch (err) {
-      setError("Không thể lấy lịch sử đặt vé. Vui lòng thử lại sau.");
     } finally {
       setLoading(false); // Dừng loading
     }
