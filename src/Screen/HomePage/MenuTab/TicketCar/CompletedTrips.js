@@ -22,8 +22,6 @@ const CompletedTrips = ({ trips }) => {
               </View>
             );
           }
-
-          // Convert and format `departureTime`
           const departureDate = new Date(item.trip.departureTime);
           const formattedDate = departureDate.toLocaleString("vi-VN", {
             weekday: "long",
@@ -37,8 +35,8 @@ const CompletedTrips = ({ trips }) => {
             <TouchableOpacity
               style={styles.tripItem}
               onPress={() => {
-                console.log("Trip Details:", item.trip);
-                console.log("Company ID:", item.trip?.companyId);
+                // console.log("Trip Details:", item.trip);
+                // console.log("Company ID:", item.trip?.companyId);
                 navigation.navigate("Complant", {
                   tripId: item._id,
                   trip: item.trip,

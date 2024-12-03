@@ -22,8 +22,9 @@ const SettingCar = () => {
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
   const token = useSelector((state) => state.user.userInfo?.token); // Lấy token từ Redux
   const userInfo = useSelector((state) => state.user?.userInfo); // Lấy userId từ Redux
-  const dispatch = useDispatch();
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0); // State riêng cho điểm thưởng
   const navigation = useNavigation();
+
   // Hàm đổi điểm thành voucher
   const redeemPointsForVoucher = async () => {
     if (parseInt(points) <= 0 || isNaN(parseInt(points))) {
@@ -40,27 +41,18 @@ const SettingCar = () => {
           },
         }
       );
-
       if (!response.data?.voucher) {
         throw new Error("Không thể đổi điểm thành voucher.");
       }
-
       const { voucher } = response.data;
       setVoucher(voucher); // Lưu voucher vào state
       Alert.alert(
         "Thành công",
         `Bạn đã đổi thành công. Mã voucher: ${voucher.code}`
       );
-
-      const updatedUserInfo = {
-        ...userInfo,
-        loyaltyPoints: userInfo.loyaltyPoints - parseInt(points),
-      };
-      dispatch(updateUserInfo(updatedUserInfo)); // Dispatch action để cập nhật điểm
-
-      setPoints(""); // Reset điểm
       setVoucher(null); // Reset voucher
       fetchUserVouchers(); // Làm mới danh sách voucher
+      getloyalty(); // Làm mới điểm thưởng
     } catch (error) {
       Alert.alert(
         "Lỗi",
@@ -83,7 +75,7 @@ const SettingCar = () => {
           },
         }
       );
-      console.log("đây là dữ liệu của danh sách voucher", response.data);
+      // console.log("đây là dữ liệu của danh sách voucher", response.data);
       setVouchers(response.data); // Lưu danh sách voucher vào state
     } catch (error) {
       Alert.alert(
@@ -94,17 +86,40 @@ const SettingCar = () => {
       setLoading(false);
     }
   };
+  const getloyalty = async () => {
+    setLoading(true); // Set loading trạng thái
+    try {
+      const response = await axios.get(
+        `${config.BASE_URL}/vouchers/loyalty-points`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gửi token cho API
+          },
+        }
+      );
+      // console.log("Loyalty points data:", response.data);
+      // Lưu giá trị loyaltyPoints vào state
+      setLoyaltyPoints(response.data.loyaltyPoints);
+    } catch (error) {
+      Alert.alert(
+        "Lỗi",
+        error.response?.data?.message || "Không thể lấy điểm thưởng."
+      );
+    } finally {
+      setLoading(false); // Kết thúc loading
+    }
+  };
 
   // Gọi API khi component được render lần đầu
   useEffect(() => {
     fetchUserVouchers();
+    getloyalty();
   }, []);
 
   return (
     <View style={styles.container}>
       {/* Nút trở về */}
       <View style={{ marginBottom: 20 }}></View>
-
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
@@ -121,11 +136,15 @@ const SettingCar = () => {
           <View style={styles.userDetails}>
             <Text style={styles.userGreeting}>Chào mừng,</Text>
             <Text style={styles.userName}>{userInfo.fullName}</Text>
-            <Text style={styles.userPoints}>
+            {/* <Text style={styles.userPoints}>
               Điểm thưởng:{" "}
               <Text style={styles.pointsValue}>
                 {userInfo.loyaltyPoints || 0}
               </Text>
+            </Text> */}
+            <Text style={styles.userPoints}>
+              Điểm thưởng:{" "}
+              <Text style={styles.pointsValue}>{loyaltyPoints || 0}</Text>
             </Text>
           </View>
         </View>

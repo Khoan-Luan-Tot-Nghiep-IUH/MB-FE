@@ -64,8 +64,7 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
           text: "Có",
           onPress: async () => {
             try {
-              console.log("Hủy vé với ID:", bookingId);
-
+              // console.log("Hủy vé với ID:", bookingId);
               setLocalTrips((prev) =>
                 prev.filter((booking) => booking._id !== bookingId)
               );
@@ -91,7 +90,6 @@ const CurrentTrips = ({ trips, fetchBookingHistory }) => {
       ]
     );
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
