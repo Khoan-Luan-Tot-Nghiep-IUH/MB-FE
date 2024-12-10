@@ -260,7 +260,9 @@ const SeatSelection = ({ route, navigation }) => {
                   isNotForSale
                     ? styles.seatNotForSale // Ghế 1, không thể chọn
                     : isVipSeat
-                    ? styles.seatVip // Ghế VIP
+                    ? selectedSeats.includes(seat._id)
+                      ? styles.selected // VIP seat is selected
+                      : styles.seatVip // VIP seat is not selected
                     : !seat.isAvailable && seat.lockedBy !== userId
                     ? styles.sold // Ghế bị khóa
                     : selectedSeats.includes(seat._id)
@@ -271,7 +273,7 @@ const SeatSelection = ({ route, navigation }) => {
                 disabled={
                   isNotForSale ||
                   (!seat.isAvailable && seat.lockedBy !== userId)
-                } // Ghế 1 và ghế bị khóa không thể chọn
+                }
               >
                 <MaterialCommunityIcons
                   name="seat-recline-extra"
@@ -340,7 +342,7 @@ const SeatSelection = ({ route, navigation }) => {
           <MaterialCommunityIcons
             name="seat-recline-extra"
             size={24}
-            color="#C0C0C0"
+            color="#ffa500"
           />
           <Text style={styles.statusText}>Đang chọn</Text>
         </View>
@@ -349,7 +351,7 @@ const SeatSelection = ({ route, navigation }) => {
           <MaterialCommunityIcons
             name="seat-recline-extra"
             size={24}
-            color="#FFD700"
+            color="#C0C0C0"
           />
           <Text style={styles.statusText}>VIP</Text>
         </View>

@@ -339,7 +339,6 @@ const HelpCar = () => {
             </View>
           </View>
         </Modal>
-
         {/* User's Trip Requests */}
         <View style={styles.requestsContainer}>
           <Text style={styles.requestsTitle}>Your Trip Requests</Text>

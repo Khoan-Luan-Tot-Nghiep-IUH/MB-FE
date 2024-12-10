@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "XeKhach",
-    "slug": "StickerSmash",
+    "slug": "stickersmash",
     "version": "1.0.0",
     "scheme": "XeKhach",
     "orientation": "portrait",
@@ -28,8 +28,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2ea9b9fc-0c36-44b8-9e83-a761cf23b99c"
+        "projectId": "0f2c052c-703f-4b81-87ec-5153817ef5e5"
       }
-    }
+    },
+    "owner": "vominhtoan123"
   }
 }
