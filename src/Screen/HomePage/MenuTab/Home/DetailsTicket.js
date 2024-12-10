@@ -5,13 +5,15 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
+  Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useSelector } from "react-redux"; // Import useSelector to access the user state
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/DetailsTicketStyle";
 
 const DetailsTicket = ({ route, navigation }) => {
   const { trip, pickupPoints } = route.params;
+  const user = useSelector((state) => state.user.userInfo); // Access the user info from Redux
 
   if (!trip) {
     return (
@@ -42,6 +44,23 @@ const DetailsTicket = ({ route, navigation }) => {
   const { date: arrivalDate, time: arrivalTime } = formatDate(trip.arrivalTime);
 
   const handleBookTicket = () => {
+    if (!user || !user.id) {
+      // If the user is not logged in, show an alert and navigate to login screen
+      Alert.alert(
+        "Bạn cần đăng nhập",
+        "Vui lòng đăng nhập để đặt vé.",
+        [
+          {
+            text: "Đăng nhập",
+            onPress: () => navigation.navigate("Login"), // Redirect to Login page
+          },
+        ],
+        { cancelable: false }
+      );
+      return; // Prevent further navigation if not logged in
+    }
+
+    // If user is logged in, navigate to the seat selection screen
     const departureDate = trip.departureTime;
     const tripId = trip._id;
     navigation.navigate("SeatSelection", { tripId, departureDate });
