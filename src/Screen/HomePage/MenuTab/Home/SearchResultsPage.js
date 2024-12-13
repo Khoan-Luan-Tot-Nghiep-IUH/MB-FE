@@ -11,7 +11,9 @@ import { Picker } from "@react-native-picker/picker";
 import { FontAwesome5 } from "@expo/vector-icons";
 import styles from "../../../../theme/HomePage/MenutabStyle/Home/SearchResultsPage";
 import { Image } from "react-native";
-
+import config from "../../../../../config";
+import { useSelector } from "react-redux";
+import axios from "axios";
 const SearchResultsPage = ({ route, navigation }) => {
   if (!route || !route.params || !route.params.trips) {
     console.error("Route params or trips data is missing");
@@ -28,7 +30,7 @@ const SearchResultsPage = ({ route, navigation }) => {
     departureDate,
     pickupPoints,
   } = route.params;
-  console.log("Pickup Points:", pickupPoints);
+  // console.log("Pickup Points:", pickupPoints);
   if (!Array.isArray(trips)) {
     console.error("Trips is undefined or not an array");
     return (
@@ -37,7 +39,7 @@ const SearchResultsPage = ({ route, navigation }) => {
       </View>
     );
   }
-
+  const token = useSelector((state) => state.user.token);
   const [filteredTrips, setFilteredTrips] = useState(trips);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000000 });
   const [departureTimeRange, setDepartureTimeRange] = useState({
@@ -47,6 +49,28 @@ const SearchResultsPage = ({ route, navigation }) => {
   const [busTypeFilter, setBusTypeFilter] = useState("Tất cả");
   const [roundTripFilter, setRoundTripFilter] = useState("Tất cả"); // New filter state
   const [isLoading, setIsLoading] = useState(false);
+
+  const [busTypes, setBusTypes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchBusTypes = async () => {
+    try {
+      const response = await axios.get(`${config.BASE_URL}/bus-types/get-all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBusTypes(response.data.data);
+      console.log(response.data.data);
+    } catch (err) {
+      console.error("Error fetching bus types:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchBusTypes();
+  }, []);
   const applyFilters = () => {
     let filtered = trips.filter((trip) => {
       let isMatching = true;
@@ -152,6 +176,7 @@ const SearchResultsPage = ({ route, navigation }) => {
               />
             </Picker>
           </View>
+          {/* // New filter component */}
           <View style={styles.filterItem}>
             <Text style={styles.filterLabel}>
               <FontAwesome5 name="bus" size={16} color="#333" /> Loại Xe:
@@ -162,8 +187,13 @@ const SearchResultsPage = ({ route, navigation }) => {
               onValueChange={(itemValue) => setBusTypeFilter(itemValue)}
             >
               <Picker.Item label="Tất cả" value="Tất cả" />
-              <Picker.Item label="Limousine" value="Limousine" />
-              <Picker.Item label="Ghế" value="Lamborghini" />
+              {busTypes.map((busType) => (
+                <Picker.Item
+                  key={busType.id || busType.name}
+                  label={busType.name}
+                  value={busType.name}
+                />
+              ))}
             </Picker>
           </View>
         </View>
